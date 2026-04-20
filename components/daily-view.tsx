@@ -36,7 +36,7 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
     const durationMinutes = (end.getTime() - start.getTime()) / 60000
 
     return {
-      top: `${(startMinutes / 60) * HOUR_HEIGHT}px`,
+      top: `${(startMinutes / 60) * HOUR_HEIGHT + 2}px`,
       height: `${Math.max((durationMinutes / 60) * HOUR_HEIGHT - 4, 36)}px`,
     }
   }
@@ -93,12 +93,12 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
                 <p className="text-white text-sm font-semibold truncate leading-tight">
                   {booking.name}
                 </p>
-                <p className="text-zinc-400 text-xs mt-0.5 flex items-center gap-1">
+                <p className="text-white/90 text-xs mt-0.5 flex items-center gap-1">
                   <Clock className="w-3 h-3 shrink-0" />
                   {format(start, "HH:mm")} – {format(end, "HH:mm")}
                 </p>
                 {!isCompact && (
-                  <p className="text-zinc-500 text-xs mt-0.5 flex items-center gap-1 truncate">
+                  <p className="text-white/80 text-xs mt-0.5 flex items-center gap-1 truncate">
                     <Phone className="w-3 h-3 shrink-0" />
                     {booking.phone}
                   </p>
