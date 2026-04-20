@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { bookingSchema, type BookingFormData } from "@/lib/validations"
-import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react"
+import { AlertCircle, CheckCircle2, Loader2, Calendar } from "lucide-react"
 
 interface TimeValue {
   hour: number
@@ -28,6 +28,7 @@ export function BookingForm() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchema),
@@ -138,12 +139,21 @@ export function BookingForm() {
 
         <div className="space-y-2">
           <Label htmlFor="date">תאריך הזמנה</Label>
-          <Input
-            id="date"
-            type="date"
-            min={format(new Date(), "yyyy-MM-dd")}
-            {...register("date")}
-          />
+          <div className="relative h-9 w-full">
+            <Input
+              id="date"
+              type="date"
+              min={format(new Date(), "yyyy-MM-dd")}
+              {...register("date")}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+            />
+            <div className="absolute inset-0 w-full h-full flex items-center justify-between px-3 border border-input rounded-md bg-white text-sm shadow-sm pointer-events-none z-0 transition-colors">
+              <span className="text-zinc-900" dir="ltr">
+                {watch("date") ? format(new Date(watch("date")), "dd/MM/yyyy") : ""}
+              </span>
+              <Calendar className="w-4 h-4 text-zinc-500" />
+            </div>
+          </div>
           {errors.date && (
             <p className="text-xs text-red-600">{errors.date.message}</p>
           )}
