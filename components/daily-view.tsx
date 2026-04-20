@@ -57,10 +57,10 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
             className="absolute w-full flex items-start"
             style={{ top: `${(hour - 8) * HOUR_HEIGHT}px` }}
           >
-            <div className="flex-1 border-t border-zinc-100" />
-            <span className="text-xs text-zinc-400 w-14 leading-none pr-3 text-right shrink-0 -mt-2">
+            <span className="text-xs text-zinc-400 w-14 leading-none pl-3 text-right shrink-0 -mt-2">
               {hour.toString().padStart(2, "0")}:00
             </span>
+            <div className="flex-1 border-t border-zinc-100" />
           </div>
         ))}
 
@@ -70,14 +70,14 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
             className="absolute w-full flex items-start"
             style={{ top: `${(hour - 8) * HOUR_HEIGHT + HOUR_HEIGHT / 2}px` }}
           >
-            <div className="flex-1 border-t border-dashed border-zinc-100" />
-            <span className="text-xs text-zinc-300 w-14 leading-none pr-3 text-right shrink-0 -mt-2">
+            <span className="text-xs text-zinc-300 w-14 leading-none pl-3 text-right shrink-0 -mt-2">
               :30
             </span>
+            <div className="flex-1 border-t border-dashed border-zinc-100" />
           </div>
         ))}
 
-        <div className="absolute right-14 left-0 top-0 bottom-0 pr-2">
+        <div className="absolute right-14 left-0 top-0 bottom-0 pr-2 z-10">
           {dayBookings.map((booking) => {
             const start = new Date(booking.startTime)
             const end = new Date(booking.endTime)
@@ -87,7 +87,7 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
             return (
               <div
                 key={booking.id}
-                className="absolute right-2 left-2 bg-zinc-900 rounded-2xl px-3 py-2 overflow-hidden hover:bg-zinc-800 transition-colors cursor-default"
+                className="absolute right-2 left-2 bg-zinc-900 rounded-2xl px-3 py-2 overflow-hidden hover:bg-zinc-800 transition-colors cursor-default shadow-sm border border-zinc-800"
                 style={getBookingStyle(booking)}
               >
                 <p className="text-white text-sm font-semibold truncate leading-tight">
