@@ -1,0 +1,241 @@
+"use client"
+
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
+import { format } from "date-fns"
+import { AlarmTimePicker } from "@/components/alarm-time-picker"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { bookingSchema, type BookingFormData } from "@/lib/validations"
+import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react"
+
+export function BookingForm() {
+  const router = useRouter()
+  const [startTime, setStartTime] = useState({ hour: 9, minute: 0 })
+  const [endTime, setEndTime] = useState({ hour: 10, minute: 0 })
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [errorMsg, setErrorMsg] = useState("")
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<BookingFormData>({
+    resolver: zodResolver(bookingSchema),
+    defaultValues: {
+      date: format(new Date(), "yyyy-MM-dd"),
+      startHour: 9,
+      startMinute: 0,
+      endHour: 10,
+      endMinute: 0,
+    },
+  })
+
+  const onSubmit = async (data: BookingFormData) => {
+    setStatus("loading")
+    setErrorMsg("")
+
+    const payload = {
+      ...data,
+      startHour: startTime.hour,
+      startMinute: startTime.minute,
+      endHour: endTime.hour,
+      endMinute: endTime.minute,
+    }
+
+    // Client-side duration check
+    const startMins = startTime.hour * 60 + startTime.minute
+    const endMins = endTime.hour * 60 + endTime.minute
+
+    if (endMins <= startMins) {
+      setErrorMsg("End time must be after start time.")
+      setStatus("error")
+      return
+    }
+
+    if (endMins - startMins > 180) {
+      setErrorMsg("Maximum booking duration is 3 hours.")
+      setStatus("error")
+      return
+    }
+
+    if (endMins > 20 * 60) {
+      setErrorMsg("Booking must end by 20:00.")
+      setStatus("error")
+      return
+    }
+
+    try {
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+
+      const json = await res.json()
+
+      if (!res.ok) {
+        setErrorMsg(json.error || "Failed to create booking.")
+        setStatus("error")
+        return
+      }
+
+      setStatus("success")
+      setTimeout(() => router.push("/dashboard"), 1500)
+    } catch {
+      setErrorMsg("Network error. Please try again.")
+      setStatus("error")
+    }
+  }
+
+  if (status === "success") {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
+        <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center">
+          <CheckCircle2 className="w-8 h-8 text-white" />
+        </div>
+        <h2 className="text-xl font-semibold text-zinc-900">Booking Confirmed</h2>
+        <p className="text-zinc-500 text-sm">Redirecting to dashboard…</p>
+      </div>
+    )
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      {/* Personal Info */}
+      <div className="space-y-4">
+        <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
+          Your Details
+        </h2>
+
+        <div className="space-y-2">
+          <Label htmlFor="name">Full Name</Label>
+          <Input
+            id="name"
+            placeholder="Jane Smith"
+            {...register("name")}
+          />
+          {errors.name && (
+            <p className="text-xs text-red-500">{errors.name.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="email">Email Address</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="jane@company.com"
+            {...register("email")}
+          />
+          {errors.email && (
+            <p className="text-xs text-red-500">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="phone">Phone Number</Label>
+          <Input
+            id="phone"
+            type="tel"
+            placeholder="+1 555 000 0000"
+            {...register("phone")}
+          />
+          {errors.phone && (
+            <p className="text-xs text-red-500">{errors.phone.message}</p>
+          )}
+        </div>
+      </div>
+
+      {/* Date */}
+      <div className="space-y-4">
+        <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
+          Date
+        </h2>
+        <div className="space-y-2">
+          <Label htmlFor="date">Booking Date</Label>
+          <Input
+            id="date"
+            type="date"
+            min={format(new Date(), "yyyy-MM-dd")}
+            {...register("date")}
+          />
+          {errors.date && (
+            <p className="text-xs text-red-500">{errors.date.message}</p>
+          )}
+        </div>
+      </div>
+
+      {/* Time pickers */}
+      <div className="space-y-4">
+        <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
+          Time (08:00 – 20:00 · max 3 hours)
+        </h2>
+
+        <div className="grid grid-cols-2 gap-6">
+          <AlarmTimePicker
+            label="Start"
+            value={startTime}
+            onChange={setStartTime}
+            minHour={8}
+            maxHour={20}
+          />
+          <AlarmTimePicker
+            label="End"
+            value={endTime}
+            onChange={setEndTime}
+            minHour={8}
+            maxHour={20}
+          />
+        </div>
+
+        {(errors.startHour || errors.endHour) && (
+          <p className="text-xs text-red-500">
+            {errors.endHour?.message || errors.startHour?.message}
+          </p>
+        )}
+      </div>
+
+      {/* Duration preview */}
+      <div className="rounded-2xl bg-zinc-50 border border-zinc-100 px-4 py-3 text-sm text-zinc-600">
+        Duration:{" "}
+        <span className="font-semibold text-zinc-900">
+          {(() => {
+            const mins =
+              endTime.hour * 60 + endTime.minute - (startTime.hour * 60 + startTime.minute)
+            if (mins <= 0) return "—"
+            const h = Math.floor(mins / 60)
+            const m = mins % 60
+            return `${h > 0 ? `${h}h ` : ""}${m > 0 ? `${m}min` : ""}`
+          })()}
+        </span>
+      </div>
+
+      {status === "error" && (
+        <div className="flex items-center gap-2 rounded-2xl bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-600">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          {errorMsg}
+        </div>
+      )}
+
+      <Button
+        type="submit"
+        size="lg"
+        className="w-full"
+        disabled={status === "loading"}
+      >
+        {status === "loading" ? (
+          <>
+            <Loader2 className="w-4 h-4 animate-spin" />
+            Checking availability…
+          </>
+        ) : (
+          "Confirm Booking"
+        )}
+      </Button>
+    </form>
+  )
+}
