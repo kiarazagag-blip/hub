@@ -77,7 +77,7 @@ export function AlarmTimePicker({
       const clamped = Math.max(0, Math.min(hours.length - 1, index))
       const newHour = hours[clamped]
       if (newHour !== value.hour) onChange({ ...value, hour: newHour })
-    }, 80)
+    }, 20)
   }, [hours, value, onChange])
 
   const handleMinuteScroll = useCallback(() => {
@@ -89,7 +89,7 @@ export function AlarmTimePicker({
       const clamped = Math.max(0, Math.min(minutes.length - 1, index))
       const newMinute = minutes[clamped]
       if (newMinute !== value.minute) onChange({ ...value, minute: newMinute })
-    }, 80)
+    }, 20)
   }, [minutes, value, onChange])
 
   const VISIBLE = 3
@@ -98,7 +98,7 @@ export function AlarmTimePicker({
   return (
     <div className="flex flex-col items-center gap-3">
       {label && (
-        <span className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
+        <span className="text-xs font-semibold text-zinc-700 uppercase tracking-widest">
           {label}
         </span>
       )}
@@ -144,7 +144,7 @@ export function AlarmTimePicker({
                     "flex items-center justify-center snap-center cursor-pointer select-none transition-all duration-150",
                     value.hour === h
                       ? "text-zinc-900 text-2xl font-bold"
-                      : "text-zinc-300 text-xl font-light"
+                      : "text-zinc-500 text-xl font-light"
                   )}
                   onClick={() => {
                     onChange({ ...value, hour: h })
@@ -197,7 +197,7 @@ export function AlarmTimePicker({
                     "flex items-center justify-center snap-center cursor-pointer select-none transition-all duration-150",
                     value.minute === m
                       ? "text-zinc-900 text-2xl font-bold"
-                      : "text-zinc-300 text-xl font-light"
+                      : "text-zinc-500 text-xl font-light"
                   )}
                   onClick={() => {
                     onChange({ ...value, minute: m })
@@ -213,7 +213,7 @@ export function AlarmTimePicker({
       </div>
 
       {/* Time readout */}
-      <span className="text-xs font-mono text-zinc-400" dir="ltr">
+      <span className="text-xs font-mono text-zinc-700" dir="ltr">
         {value.hour.toString().padStart(2, "0")}:{value.minute.toString().padStart(2, "0")}
       </span>
     </div>

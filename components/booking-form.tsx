@@ -86,7 +86,7 @@ export function BookingForm() {
           <CheckCircle2 className="w-8 h-8 text-white" />
         </div>
         <h2 className="text-xl font-semibold text-zinc-900">ההזמנה אושרה!</h2>
-        <p className="text-zinc-500 text-sm">מעביר ללוח הבקרה…</p>
+        <p className="text-zinc-700 text-sm">מעביר ללוח הבקרה…</p>
       </div>
     )
   }
@@ -96,9 +96,9 @@ export function BookingForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      {/* Personal Info */}
+      {/* Personal Info & Date */}
       <div className="space-y-4">
-        <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
+        <h2 className="text-xs font-semibold text-zinc-700 uppercase tracking-widest">
           הפרטים שלך
         </h2>
 
@@ -106,7 +106,7 @@ export function BookingForm() {
           <Label htmlFor="name">שם מלא</Label>
           <Input id="name" placeholder="ישראל ישראלי" {...register("name")} />
           {errors.name && (
-            <p className="text-xs text-red-500">{errors.name.message}</p>
+            <p className="text-xs text-red-600">{errors.name.message}</p>
           )}
         </div>
 
@@ -119,7 +119,7 @@ export function BookingForm() {
             {...register("email")}
           />
           {errors.email && (
-            <p className="text-xs text-red-500">{errors.email.message}</p>
+            <p className="text-xs text-red-600">{errors.email.message}</p>
           )}
         </div>
 
@@ -132,16 +132,10 @@ export function BookingForm() {
             {...register("phone")}
           />
           {errors.phone && (
-            <p className="text-xs text-red-500">{errors.phone.message}</p>
+            <p className="text-xs text-red-600">{errors.phone.message}</p>
           )}
         </div>
-      </div>
 
-      {/* Date */}
-      <div className="space-y-4">
-        <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
-          תאריך
-        </h2>
         <div className="space-y-2">
           <Label htmlFor="date">תאריך הזמנה</Label>
           <Input
@@ -151,15 +145,15 @@ export function BookingForm() {
             {...register("date")}
           />
           {errors.date && (
-            <p className="text-xs text-red-500">{errors.date.message}</p>
+            <p className="text-xs text-red-600">{errors.date.message}</p>
           )}
         </div>
       </div>
 
       {/* Time pickers */}
       <div className="space-y-4">
-        <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
-          שעה (08:00 – 20:00 · עד 3 שעות)
+        <h2 className="text-xs font-semibold text-zinc-700 uppercase tracking-widest text-center">
+          ניתן לסמן עד 3 שעות
         </h2>
 
         <div className="grid grid-cols-2 gap-6">
@@ -180,14 +174,14 @@ export function BookingForm() {
         </div>
 
         {(errors.startHour || errors.endHour) && (
-          <p className="text-xs text-red-500">
+          <p className="text-xs text-red-600 text-center">
             {errors.endHour?.message || errors.startHour?.message}
           </p>
         )}
       </div>
 
       {/* Duration preview */}
-      <div className="rounded-2xl bg-zinc-50 border border-zinc-100 px-4 py-3 text-sm text-zinc-600">
+      <div className="rounded-2xl bg-zinc-50 border border-zinc-200 px-4 py-3 text-sm text-zinc-800">
         משך:{" "}
         <span className="font-semibold text-zinc-900">
           {durationMins <= 0
@@ -197,7 +191,7 @@ export function BookingForm() {
       </div>
 
       {status === "error" && (
-        <div className="flex items-center gap-2 rounded-2xl bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-600">
+        <div className="flex items-center gap-2 rounded-2xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
           <AlertCircle className="w-4 h-4 shrink-0" />
           {errorMsg}
         </div>
