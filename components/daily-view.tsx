@@ -36,8 +36,8 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
     const durationMinutes = (end.getTime() - start.getTime()) / 60000
 
     return {
-      top: `${(startMinutes / 60) * HOUR_HEIGHT + 2}px`,
-      height: `${Math.max((durationMinutes / 60) * HOUR_HEIGHT - 4, 36)}px`,
+      top: `${(startMinutes / 60) * HOUR_HEIGHT + 3}px`,
+      height: `${Math.max((durationMinutes / 60) * HOUR_HEIGHT - 5, 36)}px`,
     }
   }
 
@@ -57,7 +57,7 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
             className="absolute w-full flex items-start"
             style={{ top: `${(hour - 8) * HOUR_HEIGHT}px` }}
           >
-            <span className="text-xs text-zinc-400 w-14 leading-none pl-3 text-right shrink-0 -mt-2">
+            <span className="text-xs text-zinc-600 w-14 leading-none pl-3 text-right shrink-0 -mt-2">
               {hour.toString().padStart(2, "0")}:00
             </span>
             <div className="flex-1 border-t border-zinc-100" />
@@ -70,8 +70,8 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
             className="absolute w-full flex items-start"
             style={{ top: `${(hour - 8) * HOUR_HEIGHT + HOUR_HEIGHT / 2}px` }}
           >
-            <span className="text-xs text-zinc-300 w-14 leading-none pl-3 text-right shrink-0 -mt-2">
-              :30
+            <span className="text-xs text-zinc-500 w-14 leading-none pl-3 text-right shrink-0 -mt-2">
+              {hour.toString().padStart(2, "0")}:30
             </span>
             <div className="flex-1 border-t border-dashed border-zinc-100" />
           </div>
