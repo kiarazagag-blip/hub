@@ -50,7 +50,7 @@ export default async function DashboardPage({
     <div className="min-h-screen bg-white">
       <Navbar userName={session.user?.name} />
 
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main className="max-w-2xl mx-auto px-4 py-8 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
         <div className="flex items-center justify-between mb-8">
           {/* In RTL: right arrow = go back (previous) */}
           <Link

@@ -26,7 +26,7 @@ export default async function MonthlyPage() {
     <div className="min-h-screen bg-white">
       <Navbar userName={session.user?.name} />
 
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main className="max-w-2xl mx-auto px-4 py-8 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
         <div className="mb-8">
           <h1 className="text-xl font-bold text-zinc-900">סקירה חודשית</h1>
           <p className="text-sm text-zinc-500 mt-1">
