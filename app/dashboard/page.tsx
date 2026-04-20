@@ -8,15 +8,18 @@ import { DailyView } from "@/components/daily-view"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
 
-interface PageProps {
-  searchParams: { date?: string }
-}
+type SearchParams = Promise<{ date?: string }>
 
-export default async function DashboardPage({ searchParams }: PageProps) {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: SearchParams
+}) {
   const session = await getServerSession(authOptions)
   if (!session) redirect("/login")
 
-  const dateStr = searchParams.date || format(new Date(), "yyyy-MM-dd")
+  const { date: dateParam } = await searchParams
+  const dateStr = dateParam || format(new Date(), "yyyy-MM-dd")
   const selectedDate = parseISO(dateStr)
 
   const prevDate = new Date(selectedDate)
@@ -47,7 +50,6 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       <Navbar userName={session.user?.name} />
 
       <main className="max-w-2xl mx-auto px-4 py-8">
-        {/* Date navigation */}
         <div className="flex items-center justify-between mb-8">
           <Link
             href={`/dashboard?date=${format(prevDate, "yyyy-MM-dd")}`}

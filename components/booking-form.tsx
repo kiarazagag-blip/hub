@@ -12,16 +12,22 @@ import { Label } from "@/components/ui/label"
 import { bookingSchema, type BookingFormData } from "@/lib/validations"
 import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react"
 
+interface TimeValue {
+  hour: number
+  minute: number
+}
+
 export function BookingForm() {
   const router = useRouter()
-  const [startTime, setStartTime] = useState({ hour: 9, minute: 0 })
-  const [endTime, setEndTime] = useState({ hour: 10, minute: 0 })
+  const [startTime, setStartTime] = useState<TimeValue>({ hour: 9, minute: 0 })
+  const [endTime, setEndTime] = useState<TimeValue>({ hour: 10, minute: 0 })
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [errorMsg, setErrorMsg] = useState("")
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchema),
@@ -34,45 +40,27 @@ export function BookingForm() {
     },
   })
 
+  const handleStartChange = (val: TimeValue) => {
+    setStartTime(val)
+    setValue("startHour", val.hour, { shouldValidate: false })
+    setValue("startMinute", val.minute, { shouldValidate: false })
+  }
+
+  const handleEndChange = (val: TimeValue) => {
+    setEndTime(val)
+    setValue("endHour", val.hour, { shouldValidate: false })
+    setValue("endMinute", val.minute, { shouldValidate: false })
+  }
+
   const onSubmit = async (data: BookingFormData) => {
     setStatus("loading")
     setErrorMsg("")
-
-    const payload = {
-      ...data,
-      startHour: startTime.hour,
-      startMinute: startTime.minute,
-      endHour: endTime.hour,
-      endMinute: endTime.minute,
-    }
-
-    // Client-side duration check
-    const startMins = startTime.hour * 60 + startTime.minute
-    const endMins = endTime.hour * 60 + endTime.minute
-
-    if (endMins <= startMins) {
-      setErrorMsg("End time must be after start time.")
-      setStatus("error")
-      return
-    }
-
-    if (endMins - startMins > 180) {
-      setErrorMsg("Maximum booking duration is 3 hours.")
-      setStatus("error")
-      return
-    }
-
-    if (endMins > 20 * 60) {
-      setErrorMsg("Booking must end by 20:00.")
-      setStatus("error")
-      return
-    }
 
     try {
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(data),
       })
 
       const json = await res.json()
@@ -103,6 +91,9 @@ export function BookingForm() {
     )
   }
 
+  const durationMins =
+    endTime.hour * 60 + endTime.minute - (startTime.hour * 60 + startTime.minute)
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       {/* Personal Info */}
@@ -113,11 +104,7 @@ export function BookingForm() {
 
         <div className="space-y-2">
           <Label htmlFor="name">Full Name</Label>
-          <Input
-            id="name"
-            placeholder="Jane Smith"
-            {...register("name")}
-          />
+          <Input id="name" placeholder="Jane Smith" {...register("name")} />
           {errors.name && (
             <p className="text-xs text-red-500">{errors.name.message}</p>
           )}
@@ -179,14 +166,14 @@ export function BookingForm() {
           <AlarmTimePicker
             label="Start"
             value={startTime}
-            onChange={setStartTime}
+            onChange={handleStartChange}
             minHour={8}
             maxHour={20}
           />
           <AlarmTimePicker
             label="End"
             value={endTime}
-            onChange={setEndTime}
+            onChange={handleEndChange}
             minHour={8}
             maxHour={20}
           />
@@ -203,14 +190,9 @@ export function BookingForm() {
       <div className="rounded-2xl bg-zinc-50 border border-zinc-100 px-4 py-3 text-sm text-zinc-600">
         Duration:{" "}
         <span className="font-semibold text-zinc-900">
-          {(() => {
-            const mins =
-              endTime.hour * 60 + endTime.minute - (startTime.hour * 60 + startTime.minute)
-            if (mins <= 0) return "—"
-            const h = Math.floor(mins / 60)
-            const m = mins % 60
-            return `${h > 0 ? `${h}h ` : ""}${m > 0 ? `${m}min` : ""}`
-          })()}
+          {durationMins <= 0
+            ? "—"
+            : `${Math.floor(durationMins / 60) > 0 ? `${Math.floor(durationMins / 60)}h ` : ""}${durationMins % 60 > 0 ? `${durationMins % 60}min` : ""}`}
         </span>
       </div>
 
