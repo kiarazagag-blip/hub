@@ -103,7 +103,7 @@ export function AlarmTimePicker({
         </span>
       )}
 
-      <div className="flex items-center bg-zinc-50 rounded-3xl px-4 py-3 gap-0 shadow-inner border border-zinc-100">
+      <div className="flex items-center bg-zinc-50 rounded-3xl px-4 py-3 gap-0 shadow-inner border border-zinc-100" dir="ltr">
         {/* Hour drum */}
         <div className="relative" style={{ width: 56, height: containerHeight }}>
           {/* Fade top */}
@@ -213,7 +213,7 @@ export function AlarmTimePicker({
       </div>
 
       {/* Time readout */}
-      <span className="text-xs font-mono text-zinc-400">
+      <span className="text-xs font-mono text-zinc-400" dir="ltr">
         {value.hour.toString().padStart(2, "0")}:{value.minute.toString().padStart(2, "0")}
       </span>
     </div>
