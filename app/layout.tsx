@@ -1,13 +1,13 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Heebo } from "next/font/google"
 import "./globals.css"
 import { Providers } from "@/components/providers"
 
-const inter = Inter({ subsets: ["latin"] })
+const heebo = Heebo({ subsets: ["hebrew", "latin"] })
 
 export const metadata: Metadata = {
-  title: "BookRoom — Meeting Room Booking",
-  description: "Minimalist meeting room booking for modern teams.",
+  title: "הזמנת חדר ישיבות",
+  description: "מערכת הזמנת חדר ישיבות מודרנית",
 }
 
 export default function RootLayout({
@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="he" dir="rtl">
+      <body className={heebo.className}>
         <Providers>{children}</Providers>
       </body>
     </html>

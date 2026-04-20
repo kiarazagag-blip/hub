@@ -14,9 +14,9 @@ export default async function BookPage() {
 
       <main className="max-w-lg mx-auto px-4 py-10">
         <div className="mb-8">
-          <h1 className="text-xl font-bold text-zinc-900">New Booking</h1>
+          <h1 className="text-xl font-bold text-zinc-900">הזמנה חדשה</h1>
           <p className="text-sm text-zinc-500 mt-1">
-            Reserve the meeting room · 08:00 – 20:00 · max 3 hours
+            הזמנת חדר ישיבות · 08:00 – 20:00 · עד 3 שעות
           </p>
         </div>
 

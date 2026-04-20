@@ -66,7 +66,7 @@ export function BookingForm() {
       const json = await res.json()
 
       if (!res.ok) {
-        setErrorMsg(json.error || "Failed to create booking.")
+        setErrorMsg(json.error || "ההזמנה נכשלה.")
         setStatus("error")
         return
       }
@@ -74,7 +74,7 @@ export function BookingForm() {
       setStatus("success")
       setTimeout(() => router.push("/dashboard"), 1500)
     } catch {
-      setErrorMsg("Network error. Please try again.")
+      setErrorMsg("שגיאת רשת. נסה שוב.")
       setStatus("error")
     }
   }
@@ -85,8 +85,8 @@ export function BookingForm() {
         <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center">
           <CheckCircle2 className="w-8 h-8 text-white" />
         </div>
-        <h2 className="text-xl font-semibold text-zinc-900">Booking Confirmed</h2>
-        <p className="text-zinc-500 text-sm">Redirecting to dashboard…</p>
+        <h2 className="text-xl font-semibold text-zinc-900">ההזמנה אושרה!</h2>
+        <p className="text-zinc-500 text-sm">מעביר ללוח הבקרה…</p>
       </div>
     )
   }
@@ -99,23 +99,23 @@ export function BookingForm() {
       {/* Personal Info */}
       <div className="space-y-4">
         <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
-          Your Details
+          הפרטים שלך
         </h2>
 
         <div className="space-y-2">
-          <Label htmlFor="name">Full Name</Label>
-          <Input id="name" placeholder="Jane Smith" {...register("name")} />
+          <Label htmlFor="name">שם מלא</Label>
+          <Input id="name" placeholder="ישראל ישראלי" {...register("name")} />
           {errors.name && (
             <p className="text-xs text-red-500">{errors.name.message}</p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Email Address</Label>
+          <Label htmlFor="email">כתובת אימייל</Label>
           <Input
             id="email"
             type="email"
-            placeholder="jane@company.com"
+            placeholder="you@company.com"
             {...register("email")}
           />
           {errors.email && (
@@ -124,11 +124,11 @@ export function BookingForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="phone">Phone Number</Label>
+          <Label htmlFor="phone">מספר טלפון</Label>
           <Input
             id="phone"
             type="tel"
-            placeholder="+1 555 000 0000"
+            placeholder="050-0000000"
             {...register("phone")}
           />
           {errors.phone && (
@@ -140,10 +140,10 @@ export function BookingForm() {
       {/* Date */}
       <div className="space-y-4">
         <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
-          Date
+          תאריך
         </h2>
         <div className="space-y-2">
-          <Label htmlFor="date">Booking Date</Label>
+          <Label htmlFor="date">תאריך הזמנה</Label>
           <Input
             id="date"
             type="date"
@@ -159,19 +159,19 @@ export function BookingForm() {
       {/* Time pickers */}
       <div className="space-y-4">
         <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
-          Time (08:00 – 20:00 · max 3 hours)
+          שעה (08:00 – 20:00 · עד 3 שעות)
         </h2>
 
         <div className="grid grid-cols-2 gap-6">
           <AlarmTimePicker
-            label="Start"
+            label="התחלה"
             value={startTime}
             onChange={handleStartChange}
             minHour={8}
             maxHour={20}
           />
           <AlarmTimePicker
-            label="End"
+            label="סיום"
             value={endTime}
             onChange={handleEndChange}
             minHour={8}
@@ -188,11 +188,11 @@ export function BookingForm() {
 
       {/* Duration preview */}
       <div className="rounded-2xl bg-zinc-50 border border-zinc-100 px-4 py-3 text-sm text-zinc-600">
-        Duration:{" "}
+        משך:{" "}
         <span className="font-semibold text-zinc-900">
           {durationMins <= 0
             ? "—"
-            : `${Math.floor(durationMins / 60) > 0 ? `${Math.floor(durationMins / 60)}h ` : ""}${durationMins % 60 > 0 ? `${durationMins % 60}min` : ""}`}
+            : `${Math.floor(durationMins / 60) > 0 ? `${Math.floor(durationMins / 60)} שע׳ ` : ""}${durationMins % 60 > 0 ? `${durationMins % 60} דק׳` : ""}`}
         </span>
       </div>
 
@@ -212,10 +212,10 @@ export function BookingForm() {
         {status === "loading" ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
-            Checking availability…
+            בודק זמינות…
           </>
         ) : (
-          "Confirm Booking"
+          "אישור הזמנה"
         )}
       </Button>
     </form>

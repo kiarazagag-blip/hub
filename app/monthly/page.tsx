@@ -28,9 +28,9 @@ export default async function MonthlyPage() {
 
       <main className="max-w-2xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-xl font-bold text-zinc-900">Monthly Overview</h1>
+          <h1 className="text-xl font-bold text-zinc-900">סקירה חודשית</h1>
           <p className="text-sm text-zinc-500 mt-1">
-            {bookings.length} total booking{bookings.length !== 1 ? "s" : ""}
+            {bookings.length} {bookings.length === 1 ? "הזמנה" : "הזמנות"} בסך הכל
           </p>
         </div>
 

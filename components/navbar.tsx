@@ -14,8 +14,8 @@ export function Navbar({ userName }: NavbarProps) {
   const pathname = usePathname()
 
   const links = [
-    { href: "/dashboard", label: "Daily", icon: CalendarDays },
-    { href: "/monthly", label: "Monthly", icon: LayoutGrid },
+    { href: "/dashboard", label: "יומי", icon: CalendarDays },
+    { href: "/monthly", label: "חודשי", icon: LayoutGrid },
   ]
 
   return (
@@ -25,8 +25,8 @@ export function Navbar({ userName }: NavbarProps) {
           <div className="w-7 h-7 bg-zinc-900 rounded-lg flex items-center justify-center">
             <CalendarDays className="w-4 h-4 text-white" />
           </div>
-          <span className="font-semibold text-zinc-900 text-sm tracking-tight">
-            BookRoom
+          <span className="font-bold text-zinc-900 text-sm tracking-tight">
+            חדר ישיבות
           </span>
         </Link>
 
@@ -50,14 +50,12 @@ export function Navbar({ userName }: NavbarProps) {
           <Link
             href="/book"
             className={cn(
-              "flex items-center gap-1.5 ml-2 px-3 py-1.5 rounded-xl text-sm font-medium transition-all",
-              pathname === "/book"
-                ? "bg-zinc-900 text-white"
-                : "bg-zinc-900 text-white hover:bg-zinc-800"
+              "flex items-center gap-1.5 ml-2 px-3 py-1.5 rounded-xl text-sm font-medium transition-all bg-zinc-900 text-white hover:bg-zinc-800",
+              pathname === "/book" && "bg-zinc-700"
             )}
           >
             <Plus className="w-3.5 h-3.5" />
-            Book
+            הזמן
           </Link>
         </nav>
 
@@ -68,7 +66,7 @@ export function Navbar({ userName }: NavbarProps) {
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
             className="p-2 rounded-xl hover:bg-zinc-100 transition-colors text-zinc-400 hover:text-zinc-700"
-            title="Sign out"
+            title="התנתק"
           >
             <LogOut className="w-4 h-4" />
           </button>

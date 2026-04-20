@@ -39,7 +39,7 @@ export default function RegisterPage() {
     const json = await res.json()
 
     if (!res.ok) {
-      setError(json.error || "Registration failed.")
+      setError(json.error || "ההרשמה נכשלה.")
       setLoading(false)
       return
     }
@@ -54,8 +54,8 @@ export default function RegisterPage() {
         <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center">
           <CheckCircle2 className="w-8 h-8 text-white" />
         </div>
-        <h2 className="text-xl font-semibold text-zinc-900">Account created!</h2>
-        <p className="text-zinc-500 text-sm">Redirecting to login…</p>
+        <h2 className="text-xl font-semibold text-zinc-900">החשבון נוצר בהצלחה!</h2>
+        <p className="text-zinc-500 text-sm">מעביר לדף ההתחברות…</p>
       </div>
     )
   }
@@ -67,21 +67,21 @@ export default function RegisterPage() {
           <div className="w-12 h-12 bg-zinc-900 rounded-2xl flex items-center justify-center mb-4">
             <CalendarDays className="w-6 h-6 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-zinc-900">Create account</h1>
-          <p className="text-sm text-zinc-500 mt-1">Start booking meeting rooms</p>
+          <h1 className="text-2xl font-bold text-zinc-900">יצירת חשבון</h1>
+          <p className="text-sm text-zinc-500 mt-1">התחל להזמין חדרי ישיבות</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
-            <Input id="name" placeholder="Jane Smith" {...register("name")} />
+            <Label htmlFor="name">שם מלא</Label>
+            <Input id="name" placeholder="ישראל ישראלי" {...register("name")} />
             {errors.name && (
               <p className="text-xs text-red-500">{errors.name.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">אימייל</Label>
             <Input
               id="email"
               type="email"
@@ -94,11 +94,11 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">סיסמה</Label>
             <Input
               id="password"
               type="password"
-              placeholder="Min. 6 characters"
+              placeholder="לפחות 6 תווים"
               {...register("password")}
             />
             {errors.password && (
@@ -114,14 +114,14 @@ export default function RegisterPage() {
           )}
 
           <Button type="submit" size="lg" className="w-full mt-2" disabled={loading}>
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create Account"}
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "צור חשבון"}
           </Button>
         </form>
 
         <p className="text-center text-sm text-zinc-500 mt-6">
-          Already have an account?{" "}
+          כבר יש לך חשבון?{" "}
           <Link href="/login" className="text-zinc-900 font-medium hover:underline">
-            Sign in
+            התחבר
           </Link>
         </p>
       </div>

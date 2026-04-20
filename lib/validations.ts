@@ -2,10 +2,10 @@ import { z } from "zod"
 
 export const bookingSchema = z
   .object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.string().email("Invalid email address"),
-    phone: z.string().min(10, "Phone number must be at least 10 characters"),
-    date: z.string().min(1, "Date is required"),
+    name: z.string().min(2, "שם חייב להכיל לפחות 2 תווים"),
+    email: z.string().email("כתובת אימייל לא תקינה"),
+    phone: z.string().min(10, "מספר טלפון חייב להכיל לפחות 10 ספרות"),
+    date: z.string().min(1, "יש לבחור תאריך"),
     startHour: z.number().min(8).max(20),
     startMinute: z.number().min(0).max(59),
     endHour: z.number().min(8).max(20),
@@ -17,7 +17,7 @@ export const bookingSchema = z
       const end = data.endHour * 60 + data.endMinute
       return end > start
     },
-    { message: "End time must be after start time", path: ["endHour"] }
+    { message: "שעת הסיום חייבת להיות אחרי שעת ההתחלה", path: ["endHour"] }
   )
   .refine(
     (data) => {
@@ -25,22 +25,22 @@ export const bookingSchema = z
       const end = data.endHour * 60 + data.endMinute
       return end - start <= 180
     },
-    { message: "Maximum booking duration is 3 hours", path: ["endHour"] }
+    { message: "משך ההזמנה המקסימלי הוא 3 שעות", path: ["endHour"] }
   )
   .refine(
     (data) => data.endHour * 60 + data.endMinute <= 20 * 60,
-    { message: "Booking must end by 20:00", path: ["endHour"] }
+    { message: "ההזמנה חייבת להסתיים עד 20:00", path: ["endHour"] }
   )
 
 export type BookingFormData = z.infer<typeof bookingSchema>
 
 export const loginSchema = z.object({
-  email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  email: z.string().email("אימייל לא תקין"),
+  password: z.string().min(6, "הסיסמה חייבת להכיל לפחות 6 תווים"),
 })
 
 export const registerSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  name: z.string().min(2, "שם חייב להכיל לפחות 2 תווים"),
+  email: z.string().email("אימייל לא תקין"),
+  password: z.string().min(6, "הסיסמה חייבת להכיל לפחות 6 תווים"),
 })

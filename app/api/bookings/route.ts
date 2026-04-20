@@ -55,7 +55,7 @@ export async function POST(req: Request) {
       const c = conflicts[0]
       return NextResponse.json(
         {
-          error: `Time slot conflicts with an existing booking (${new Date(c.startTime).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} – ${new Date(c.endTime).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}).`,
+          error: `קיימת התנגשות עם הזמנה קיימת (${new Date(c.startTime).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" })} – ${new Date(c.endTime).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" })}).`,
         },
         { status: 409 }
       )

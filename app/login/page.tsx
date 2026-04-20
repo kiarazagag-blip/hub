@@ -37,7 +37,7 @@ export default function LoginPage() {
     })
 
     if (result?.error) {
-      setError("Invalid email or password.")
+      setError("אימייל או סיסמה שגויים.")
       setLoading(false)
     } else {
       router.push("/dashboard")
@@ -48,18 +48,17 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        {/* Logo */}
         <div className="flex flex-col items-center mb-10">
           <div className="w-12 h-12 bg-zinc-900 rounded-2xl flex items-center justify-center mb-4">
             <CalendarDays className="w-6 h-6 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-zinc-900">Welcome back</h1>
-          <p className="text-sm text-zinc-500 mt-1">Sign in to manage bookings</p>
+          <h1 className="text-2xl font-bold text-zinc-900">ברוך שובך</h1>
+          <p className="text-sm text-zinc-500 mt-1">התחבר כדי לנהל הזמנות</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">אימייל</Label>
             <Input
               id="email"
               type="email"
@@ -73,7 +72,7 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">סיסמה</Label>
             <Input
               id="password"
               type="password"
@@ -94,14 +93,14 @@ export default function LoginPage() {
           )}
 
           <Button type="submit" size="lg" className="w-full mt-2" disabled={loading}>
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In"}
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "התחבר"}
           </Button>
         </form>
 
         <p className="text-center text-sm text-zinc-500 mt-6">
-          No account?{" "}
+          אין לך חשבון?{" "}
           <Link href="/register" className="text-zinc-900 font-medium hover:underline">
-            Create one
+            הירשם עכשיו
           </Link>
         </p>
       </div>
