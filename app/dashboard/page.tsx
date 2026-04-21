@@ -3,11 +3,7 @@ import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { redirect } from "next/navigation"
 import { format, parseISO } from "date-fns"
-import { he } from "date-fns/locale"
-import { Navbar } from "@/components/navbar"
-import { DailyView } from "@/components/daily-view"
-import { ChevronRight, ChevronLeft } from "lucide-react"
-import Link from "next/link"
+import { DashboardClient } from "./client"
 
 type SearchParams = Promise<{ date?: string }>
 
@@ -41,49 +37,13 @@ export default async function DashboardPage({
     endTime: b.endTime.toISOString(),
   }))
 
-  const dayCount = serialized.filter((b) => {
-    const d = new Date(b.startTime)
-    return d.toDateString() === selectedDate.toDateString()
-  }).length
-
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar userName={session.user?.name} />
-
-      <main className="max-w-2xl mx-auto px-4 py-8 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
-        <div className="flex items-center justify-between mb-8">
-          {/* In RTL: right arrow = go back (previous) */}
-          <Link
-            href={`/dashboard?date=${format(nextDate, "yyyy-MM-dd")}`}
-            className="p-2 rounded-xl hover:bg-zinc-100 transition-colors text-zinc-500"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </Link>
-
-          <div className="text-center">
-            <h1 className="text-xl font-bold text-zinc-900">
-              {format(selectedDate, "EEEE", { locale: he })}
-            </h1>
-            <p className="text-sm text-zinc-500">
-              {format(selectedDate, "d MMMM yyyy", { locale: he })}
-            </p>
-            {dayCount > 0 && (
-              <span className="inline-block mt-1 text-xs font-medium text-zinc-900 bg-zinc-100 rounded-full px-2.5 py-0.5">
-                {dayCount} {dayCount === 1 ? "הזמנה" : "הזמנות"}
-              </span>
-            )}
-          </div>
-
-          <Link
-            href={`/dashboard?date=${format(prevDate, "yyyy-MM-dd")}`}
-            className="p-2 rounded-xl hover:bg-zinc-100 transition-colors text-zinc-500"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </Link>
-        </div>
-
-        <DailyView bookings={serialized} selectedDate={selectedDate} />
-      </main>
-    </div>
+    <DashboardClient
+      userName={session.user?.name}
+      bookings={serialized}
+      selectedDate={selectedDate}
+      prevDate={prevDate}
+      nextDate={nextDate}
+    />
   )
 }

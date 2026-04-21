@@ -1,26 +1,29 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { signOut } from "next-auth/react"
 import { CalendarDays, LayoutGrid, Plus, LogOut } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface NavbarProps {
   userName?: string | null
+  currentView?: "daily" | "monthly"
+  onViewChange?: (view: "daily" | "monthly") => void
 }
 
-export function Navbar({ userName }: NavbarProps) {
+export function Navbar({ userName, currentView, onViewChange }: NavbarProps) {
   const pathname = usePathname()
+  const router = useRouter()
 
   const links = [
-    { href: "/dashboard", label: "יומי", icon: CalendarDays },
-    { href: "/monthly", label: "חודשי", icon: LayoutGrid },
+    { id: "daily", href: "/dashboard", label: "יומי", icon: CalendarDays },
+    { id: "monthly", href: "/dashboard?view=monthly", label: "חודשי", icon: LayoutGrid },
   ]
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-zinc-100">
-      <div className="w-full px-4 md:px-8 h-16 flex items-center justify-between">
+      <div className="w-full max-w-none px-4 md:px-8 h-16 flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center gap-2 transition-transform hover:scale-105 active:scale-95">
           <div className="w-8 h-8 bg-zinc-900 rounded-xl flex items-center justify-center shadow-sm">
             <CalendarDays className="w-4 h-4 text-white" />
@@ -28,21 +31,31 @@ export function Navbar({ userName }: NavbarProps) {
         </Link>
 
         <nav className="flex items-center gap-1">
-          {links.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-all",
-                pathname === href
-                  ? "bg-zinc-900 text-white"
-                  : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100"
-              )}
-            >
-              <Icon className="w-3.5 h-3.5" />
-              {label}
-            </Link>
-          ))}
+          {links.map(({ id, href, label, icon: Icon }) => {
+            const isActive = currentView ? currentView === id : pathname === "/dashboard" && id === "daily"
+
+            return (
+              <button
+                key={id}
+                onClick={() => {
+                  if (onViewChange) {
+                    onViewChange(id as "daily" | "monthly")
+                  } else {
+                    router.push(href)
+                  }
+                }}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-all",
+                  isActive
+                    ? "bg-zinc-900 text-white"
+                    : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100"
+                )}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                {label}
+              </button>
+            )
+          })}
 
           <Link
             href="/book"
