@@ -43,6 +43,8 @@ export const viewport = {
   userScalable: false,
 }
 
+import { InstallPrompt } from "@/components/install-prompt"
+
 export default function RootLayout({
   children,
 }: {
@@ -51,7 +53,10 @@ export default function RootLayout({
   return (
     <html lang="he" dir="rtl">
       <body className={polin.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <InstallPrompt />
+        </Providers>
       </body>
     </html>
   )
