@@ -31,8 +31,18 @@ const TRANSITION = {
   ease: [0.4, 0, 0.2, 1], // iOS Standard "Fast Out, Slow In"
 }
 
-export function DashboardClient({ userName, bookings, selectedDate }: any) {
-  const [view, setView] = useState<"daily" | "monthly">("monthly")
+export function DashboardClient({ 
+  userName, 
+  bookings, 
+  selectedDate, 
+  initialView = "monthly" 
+}: { 
+  userName?: string | null; 
+  bookings: any; 
+  selectedDate: Date; 
+  initialView?: "daily" | "monthly" 
+}) {
+  const [view, setView] = useState<"daily" | "monthly">(initialView)
   const [activeDate, setActiveDate] = useState<Date>(new Date(selectedDate))
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(selectedDate))
 

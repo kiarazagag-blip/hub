@@ -18,13 +18,13 @@ const polin = localFont({
 })
 
 export const metadata: Metadata = {
-  title: "הזמנת חדר ישיבות",
+  title: "HUBbooking",
   description: "מערכת הזמנת חדר ישיבות מודרנית",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "MeetingRoom",
+    title: "HUBbooking",
   },
   formatDetection: {
     telephone: false,

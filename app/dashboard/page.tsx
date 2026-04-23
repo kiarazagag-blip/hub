@@ -5,7 +5,7 @@ import { redirect } from "next/navigation"
 import { format, parseISO } from "date-fns"
 import { DashboardClient } from "./client"
 
-type SearchParams = Promise<{ date?: string }>
+type SearchParams = Promise<{ date?: string; view?: string }>
 
 export default async function DashboardPage({
   searchParams,
@@ -15,9 +15,10 @@ export default async function DashboardPage({
   const session = await getServerSession(authOptions)
   if (!session) redirect("/login")
 
-  const { date: dateParam } = await searchParams
+  const { date: dateParam, view: viewParam } = await searchParams
   const dateStr = dateParam || format(new Date(), "yyyy-MM-dd")
   const selectedDate = parseISO(dateStr)
+  const initialView = (viewParam === "daily" || viewParam === "monthly") ? viewParam : "monthly"
 
   const prevDate = new Date(selectedDate)
   prevDate.setDate(prevDate.getDate() - 1)
@@ -44,6 +45,7 @@ export default async function DashboardPage({
       selectedDate={selectedDate}
       prevDate={prevDate}
       nextDate={nextDate}
+      initialView={initialView}
     />
   )
 }

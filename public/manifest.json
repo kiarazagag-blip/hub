@@ -1,6 +1,6 @@
 {
-  "name": "Meeting Room Booking",
-  "short_name": "MeetingRoom",
+  "name": "HUBbooking",
+  "short_name": "HUBbooking",
   "description": "Book meeting rooms with ease",
   "start_url": "/dashboard",
   "display": "standalone",

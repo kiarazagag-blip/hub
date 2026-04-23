@@ -207,21 +207,32 @@ export function BookingForm() {
         </div>
       )}
 
-      <Button
-        type="submit"
-        size="lg"
-        className="w-full"
-        disabled={status === "loading"}
-      >
-        {status === "loading" ? (
-          <>
-            <Loader2 className="w-4 h-4 animate-spin" />
-            בודק זמינות…
-          </>
-        ) : (
-          "אישור הזמנה"
-        )}
-      </Button>
+      <div className="flex gap-3">
+        <Button
+          type="button"
+          variant="ghost"
+          size="lg"
+          className="flex-1 rounded-2xl text-brand-black/60 hover:text-brand-black hover:bg-brand-gray"
+          onClick={() => router.push("/dashboard?view=monthly")}
+        >
+          ביטול
+        </Button>
+        <Button
+          type="submit"
+          size="lg"
+          className="flex-[2] bg-brand-blue hover:bg-brand-blue/90 text-white rounded-2xl shadow-lg shadow-brand-blue/20"
+          disabled={status === "loading"}
+        >
+          {status === "loading" ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin ml-2" />
+              בודק זמינות…
+            </>
+          ) : (
+            "אישור הזמנה"
+          )}
+        </Button>
+      </div>
     </form>
   )
 }
