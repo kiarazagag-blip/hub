@@ -42,22 +42,22 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full relative select-none">
       {dayBookings.length === 0 && (
-        <div className="text-center py-12 text-zinc-400">
-          <Clock className="w-8 h-8 mx-auto mb-3 opacity-40" />
-          <p className="text-sm">אין הזמנות ביום זה</p>
+        <div className="text-center py-16 text-zinc-400">
+          <Clock className="w-8 h-8 mx-auto mb-3 opacity-30" />
+          <p className="text-sm font-medium">אין הזמנות ביום זה</p>
         </div>
       )}
 
-      <div className="relative" style={{ height: `${12 * HOUR_HEIGHT}px` }}>
+      <div className="relative border-r border-zinc-100/50 mr-14" style={{ height: `${12 * HOUR_HEIGHT}px` }}>
         {hours.map((hour) => (
           <div
             key={hour}
-            className="absolute w-full flex items-start"
+            className="absolute left-0 right-0 flex items-start"
             style={{ top: `${(hour - 8) * HOUR_HEIGHT}px` }}
           >
-            <span className="text-xs text-zinc-600 w-14 leading-none pl-3 text-right shrink-0 -mt-2">
+            <span className="absolute -right-14 w-12 text-[11px] font-medium text-zinc-400 text-right leading-none -mt-1.5 pr-1">
               {hour.toString().padStart(2, "0")}:00
             </span>
             <div className="flex-1 border-t border-zinc-100" />
@@ -67,42 +67,46 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
         {hours.slice(0, -1).map((hour) => (
           <div
             key={`${hour}-30`}
-            className="absolute w-full flex items-start"
+            className="absolute left-0 right-0 flex items-start"
             style={{ top: `${(hour - 8) * HOUR_HEIGHT + HOUR_HEIGHT / 2}px` }}
           >
-            <span className="text-xs text-zinc-500 w-14 leading-none pl-3 text-right shrink-0 -mt-2">
+            <span className="absolute -right-14 w-12 text-[10px] font-medium text-zinc-300 text-right leading-none -mt-1.5 pr-1">
               {hour.toString().padStart(2, "0")}:30
             </span>
-            <div className="flex-1 border-t border-dashed border-zinc-100" />
+            <div className="flex-1 border-t border-dashed border-zinc-50" />
           </div>
         ))}
 
-        <div className="absolute right-14 left-0 top-0 bottom-0 pr-2 z-10">
+        <div className="absolute inset-0 z-10">
           {dayBookings.map((booking) => {
             const start = new Date(booking.startTime)
             const end = new Date(booking.endTime)
             const durationMin = (end.getTime() - start.getTime()) / 60000
-            const isCompact = durationMin < 60
+            const isCompact = durationMin <= 45
 
             return (
               <div
                 key={booking.id}
-                className="absolute right-2 left-2 bg-zinc-900 rounded-2xl px-3 py-2 overflow-hidden hover:bg-zinc-800 transition-colors cursor-default shadow-sm border border-zinc-800"
+                className="absolute left-1 right-1 bg-zinc-900 rounded-xl px-2.5 py-2 overflow-hidden shadow-sm border border-zinc-800 transition-colors hover:bg-zinc-800"
                 style={getBookingStyle(booking)}
               >
-                <p className="text-white text-sm font-semibold truncate leading-tight">
-                  {booking.name}
-                </p>
-                <p className="text-white/90 text-xs mt-0.5 flex items-center gap-1">
-                  <Clock className="w-3 h-3 shrink-0" />
-                  {format(start, "HH:mm")} – {format(end, "HH:mm")}
-                </p>
-                {!isCompact && (
-                  <p className="text-white/80 text-xs mt-0.5 flex items-center gap-1 truncate">
-                    <Phone className="w-3 h-3 shrink-0" />
-                    {booking.phone}
+                <div className="flex flex-col h-full justify-between">
+                  <div>
+                    <p className="text-white text-xs font-bold truncate">
+                      {booking.name}
+                    </p>
+                    {!isCompact && (
+                      <p className="text-white/60 text-[10px] mt-0.5 flex items-center gap-1 truncate">
+                        <Phone className="w-2.5 h-2.5 opacity-50" />
+                        {booking.phone}
+                      </p>
+                    )}
+                  </div>
+                  <p className="text-white/80 text-[10px] font-medium flex items-center gap-1 mt-auto">
+                    <Clock className="w-2.5 h-2.5 opacity-50" />
+                    {format(start, "HH:mm")} – {format(end, "HH:mm")}
                   </p>
-                )}
+                </div>
               </div>
             )
           })}

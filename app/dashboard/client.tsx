@@ -157,28 +157,42 @@ export function DashboardClient({ userName, bookings, selectedDate }: any) {
                     {week.map((date, di) => {
                       const inMonth = isSameMonth(date, currentMonth)
                       const isSelected = isSameDay(date, activeDate)
-                      const count = bookings.filter((b: any) => isSameDay(new Date(b.startTime), date)).length
+                      const hasBooking = bookings.some((b: any) => isSameDay(new Date(b.startTime), date))
                       const today = isToday(date)
 
                       return (
                         <button
                           key={di}
-                          onClick={() => handleDateSelect(date)}
+                          onClick={() => {
+                            if (isSelected && view === "daily") {
+                              setView("monthly")
+                            } else {
+                              handleDateSelect(date)
+                            }
+                          }}
                           className={cn(
-                            "relative aspect-square flex flex-col items-center justify-center rounded-2xl text-sm transition-all duration-300",
-                            !inMonth && "opacity-25",
-                            isSelected && "bg-zinc-900 text-white shadow-lg scale-110 z-10",
-                            !isSelected && today && "bg-zinc-100 font-semibold text-zinc-900",
-                            !isSelected && !today && inMonth && "hover:bg-zinc-50 text-zinc-900",
-                            !isSelected && !today && !inMonth && "text-zinc-400"
+                            "relative aspect-square flex flex-col items-center justify-center rounded-xl text-sm transition-all duration-200",
+                            !inMonth && "opacity-20",
+                            isSelected ? "text-white" : "text-zinc-900 hover:bg-zinc-100",
+                            !isSelected && today && "bg-zinc-100 font-bold",
+                            !isSelected && !inMonth && "text-zinc-400"
                           )}
                         >
-                          <span className="text-sm font-medium">{format(date, "d")}</span>
-                          {count > 0 && (
+                          {isSelected && (
+                            <motion.div
+                              layoutId="active-date-bg"
+                              className="absolute inset-1 bg-zinc-900 rounded-xl z-0"
+                              transition={TRANSITION}
+                            />
+                          )}
+                          <span className={cn("relative z-10 font-medium", isSelected && "font-bold")}>
+                            {format(date, "d")}
+                          </span>
+                          {hasBooking && (
                             <span
                               className={cn(
-                                "absolute bottom-1.5 w-1 h-1 rounded-full",
-                                isSelected ? "bg-white" : "bg-zinc-900"
+                                "relative z-10 w-1 h-1 rounded-full mt-0.5",
+                                isSelected ? "bg-white/80" : "bg-zinc-400"
                               )}
                             />
                           )}
