@@ -87,6 +87,10 @@ export function DashboardClient({
   const handleMonthChange = (offset: number) => {
     const next = offset > 0 ? addMonths(currentMonth, 1) : subMonths(currentMonth, 1)
     setCurrentMonth(next)
+    
+    // Also sync the active date to the same day in the new month
+    const nextActive = offset > 0 ? addMonths(activeDate, 1) : subMonths(activeDate, 1)
+    setActiveDate(nextActive)
   }
 
   const DAY_NAMES = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"]
