@@ -27,8 +27,8 @@ export function Navbar({ userName, currentView, onViewChange, selectedDate }: Na
     <header className="sticky top-0 z-50 bg-brand-white/80 backdrop-blur-xl border-b border-brand-black/5">
       <div className="w-full max-w-none px-4 md:px-8 h-16 flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center transition-transform hover:scale-105 active:scale-95 group">
-          <div className="w-8 h-8 bg-brand-black rounded-xl flex items-center justify-center transition-all">
-            <CalendarDays className="w-4 h-4 text-white" />
+          <div className="w-10 h-10 flex items-center justify-center">
+            <img src="/logo.png" alt="HUBbooking" className="w-full h-full object-contain" />
           </div>
         </Link>
 
