@@ -26,11 +26,10 @@ export function Navbar({ userName, currentView, onViewChange, selectedDate }: Na
   return (
     <header className="sticky top-0 z-50 bg-brand-white/80 backdrop-blur-xl border-b border-brand-black/5">
       <div className="w-full max-w-none px-4 md:px-8 h-16 flex items-center justify-between">
-        <Link href="/dashboard" className="flex items-center gap-2.5 transition-transform hover:scale-105 active:scale-95 group">
-          <div className="w-8 h-8 bg-brand-black rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-brand-blue/20 transition-all">
+        <Link href="/dashboard" className="flex items-center transition-transform hover:scale-105 active:scale-95 group">
+          <div className="w-8 h-8 bg-brand-black rounded-xl flex items-center justify-center transition-all">
             <CalendarDays className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-brand-black tracking-tight text-lg">HUB<span className="text-brand-blue">booking</span></span>
         </Link>
 
         <nav className="flex items-center gap-1">
@@ -50,7 +49,7 @@ export function Navbar({ userName, currentView, onViewChange, selectedDate }: Na
                 className={cn(
                   "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-all",
                   isActive
-                    ? "bg-brand-black text-white shadow-md"
+                    ? "bg-brand-black text-white"
                     : "text-brand-black/50 hover:text-brand-black hover:bg-brand-gray"
                 )}
               >
@@ -63,8 +62,8 @@ export function Navbar({ userName, currentView, onViewChange, selectedDate }: Na
           <Link
             href={selectedDate ? `/book?date=${format(selectedDate, "yyyy-MM-dd")}` : "/book"}
             className={cn(
-              "flex items-center gap-1.5 ml-2 px-3 py-1.5 rounded-xl text-sm font-bold transition-all bg-brand-blue text-white hover:bg-brand-blue/90 shadow-lg shadow-brand-blue/20",
-              pathname === "/book" && "ring-2 ring-brand-blue ring-offset-2"
+              "flex items-center gap-1.5 ml-2 px-3 py-1.5 rounded-xl text-sm font-bold transition-all bg-brand-blue text-white hover:bg-brand-blue/90",
+              pathname === "/book" && "ring-2 ring-brand-blue ring-offset-1"
             )}
           >
             <Plus className="w-3.5 h-3.5" />

@@ -24,11 +24,11 @@ import { cn } from "@/lib/utils"
 
 const TRANSITION = {
   type: "spring",
-  stiffness: 300,
-  damping: 30,
+  stiffness: 400,
+  damping: 40,
   mass: 1,
-  duration: 0.4,
-  ease: [0.4, 0, 0.2, 1], // iOS Standard "Fast Out, Slow In"
+  duration: 0.3,
+  ease: [0.4, 0, 0.2, 1],
 }
 
 export function DashboardClient({ 
@@ -131,7 +131,7 @@ export function DashboardClient({
           </div>
 
           {/* Calendar Grid */}
-          <div className="bg-white rounded-3xl p-4 shadow-sm border border-brand-black/5 relative">
+          <div className="bg-white rounded-3xl p-4 border border-brand-black/5 relative">
             {/* Day Labels */}
             <motion.div
               layout
@@ -195,7 +195,7 @@ export function DashboardClient({
                           {isSelected && (
                             <motion.div
                               layoutId="active-date-bg"
-                              className="absolute inset-1 bg-brand-blue rounded-xl z-0 shadow-lg shadow-brand-blue/30"
+                              className="absolute inset-1 bg-brand-blue rounded-xl z-0"
                               transition={TRANSITION}
                             />
                           )}

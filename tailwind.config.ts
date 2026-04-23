@@ -35,7 +35,7 @@ const config: Config = {
         brand: {
           blue: "#4A7FF8",
           yellow: "#FFC757",
-          gray: "#F0EFEB",
+          gray: "#faf9f7",
           white: "#FFFFFF",
           black: "#202020",
         },
@@ -59,8 +59,8 @@ const config: Config = {
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        "accordion-down": "accordion-down 0.1s ease-out",
+        "accordion-up": "accordion-up 0.1s ease-out",
       },
     },
   },

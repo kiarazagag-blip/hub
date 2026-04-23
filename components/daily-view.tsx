@@ -92,7 +92,7 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
             return (
               <div
                 key={booking.id}
-                className="absolute left-1 right-1 bg-brand-black rounded-xl px-3 py-2 overflow-hidden shadow-sm border border-white/5 transition-all hover:brightness-110 flex flex-col justify-center"
+                className="absolute left-1 right-1 bg-brand-black rounded-xl px-3 py-2 overflow-hidden border border-white/5 transition-all hover:brightness-110 flex flex-col justify-center"
                 style={getBookingStyle(booking)}
               >
                 <div className="flex flex-col gap-0.5">
