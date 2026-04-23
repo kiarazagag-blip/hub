@@ -32,6 +32,13 @@ const config: Config = {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
+        brand: {
+          blue: "#4A7FF8",
+          yellow: "#FFC757",
+          gray: "#F0EFEB",
+          white: "#FFFFFF",
+          black: "#202020",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

@@ -24,10 +24,10 @@ export function Navbar({ userName, currentView, onViewChange, selectedDate }: Na
   ]
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-zinc-100">
+    <header className="sticky top-0 z-50 bg-brand-white/80 backdrop-blur-xl border-b border-brand-black/5">
       <div className="w-full max-w-none px-4 md:px-8 h-16 flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center gap-2 transition-transform hover:scale-105 active:scale-95">
-          <div className="w-8 h-8 bg-zinc-900 rounded-xl flex items-center justify-center shadow-sm">
+          <div className="w-8 h-8 bg-brand-black rounded-xl flex items-center justify-center shadow-sm">
             <CalendarDays className="w-4 h-4 text-white" />
           </div>
         </Link>
@@ -49,8 +49,8 @@ export function Navbar({ userName, currentView, onViewChange, selectedDate }: Na
                 className={cn(
                   "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-all",
                   isActive
-                    ? "bg-zinc-900 text-white"
-                    : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100"
+                    ? "bg-brand-black text-white shadow-md"
+                    : "text-brand-black/50 hover:text-brand-black hover:bg-brand-gray"
                 )}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -62,8 +62,8 @@ export function Navbar({ userName, currentView, onViewChange, selectedDate }: Na
           <Link
             href={selectedDate ? `/book?date=${format(selectedDate, "yyyy-MM-dd")}` : "/book"}
             className={cn(
-              "flex items-center gap-1.5 ml-2 px-3 py-1.5 rounded-xl text-sm font-medium transition-all bg-zinc-900 text-white hover:bg-zinc-800",
-              pathname === "/book" && "bg-zinc-700"
+              "flex items-center gap-1.5 ml-2 px-3 py-1.5 rounded-xl text-sm font-bold transition-all bg-brand-blue text-white hover:bg-brand-blue/90 shadow-lg shadow-brand-blue/20",
+              pathname === "/book" && "ring-2 ring-brand-blue ring-offset-2"
             )}
           >
             <Plus className="w-3.5 h-3.5" />
@@ -73,11 +73,11 @@ export function Navbar({ userName, currentView, onViewChange, selectedDate }: Na
 
         <div className="flex items-center gap-2">
           {userName && (
-            <span className="text-xs text-zinc-500 hidden sm:block">{userName}</span>
+            <span className="text-xs font-medium text-brand-black/40 hidden sm:block">{userName}</span>
           )}
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="p-2 rounded-xl hover:bg-zinc-100 transition-colors text-zinc-400 hover:text-zinc-700"
+            className="p-2 rounded-xl hover:bg-brand-gray transition-colors text-brand-black/20 hover:text-brand-black/60"
             title="התנתק"
           >
             <LogOut className="w-4 h-4" />

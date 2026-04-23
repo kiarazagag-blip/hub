@@ -77,7 +77,7 @@ export function DashboardClient({ userName, bookings, selectedDate }: any) {
   const DAY_NAMES = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-brand-gray">
       <Navbar userName={userName} currentView={view} onViewChange={setView} selectedDate={activeDate} />
 
       <main className="max-w-2xl mx-auto px-4 py-8">
@@ -86,7 +86,7 @@ export function DashboardClient({ userName, bookings, selectedDate }: any) {
           <div className="flex items-center justify-between mb-6">
             <button
               onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(1))}
-              className="p-2 rounded-xl hover:bg-zinc-100 transition-colors text-zinc-600"
+              className="p-2 rounded-xl hover:bg-white transition-colors text-brand-black/60"
             >
               {view === "daily" ? <CalendarIcon className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
             </button>
@@ -96,12 +96,12 @@ export function DashboardClient({ userName, bookings, selectedDate }: any) {
               className="text-center"
               transition={TRANSITION}
             >
-              <h1 className="text-xl font-bold text-zinc-900">
+              <h1 className="text-xl font-bold text-brand-black">
                 {view === "daily"
                   ? format(activeDate, "EEEE", { locale: he })
                   : format(currentMonth, "MMMM yyyy", { locale: he })}
               </h1>
-              <p className="text-sm text-zinc-500">
+              <p className="text-sm text-brand-black/50">
                 {view === "daily"
                   ? format(activeDate, "d MMMM yyyy", { locale: he })
                   : `${bookings.length} הזמנות החודש`}
@@ -110,21 +110,21 @@ export function DashboardClient({ userName, bookings, selectedDate }: any) {
 
             <button
               onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(-1))}
-              className="p-2 rounded-xl hover:bg-zinc-100 transition-colors text-zinc-600"
+              className="p-2 rounded-xl hover:bg-white transition-colors text-brand-black/60"
             >
-              {view === "daily" ? <span className="text-xs font-semibold px-2">סגור</span> : <ChevronLeft className="w-5 h-5" />}
+              {view === "daily" ? <span className="text-xs font-bold px-2">סגור</span> : <ChevronLeft className="w-5 h-5" />}
             </button>
           </div>
 
           {/* Calendar Grid */}
-          <div className="relative">
+          <div className="bg-white rounded-3xl p-4 shadow-sm border border-brand-black/5 relative">
             {/* Day Labels */}
             <motion.div
               layout
-              className="grid grid-cols-7 mb-2 border-b border-zinc-50"
+              className="grid grid-cols-7 mb-2"
             >
               {DAY_NAMES.map((d) => (
-                <div key={d} className="text-center text-[10px] font-bold text-zinc-400 py-2 uppercase tracking-tighter">
+                <div key={d} className="text-center text-[10px] font-bold text-brand-black/20 py-2 uppercase tracking-tighter">
                   {d}
                 </div>
               ))}
@@ -173,17 +173,20 @@ export function DashboardClient({ userName, bookings, selectedDate }: any) {
                           className={cn(
                             "relative aspect-square flex flex-col items-center justify-center rounded-xl text-sm transition-all duration-200",
                             !inMonth && "opacity-20",
-                            isSelected ? "text-white" : "text-zinc-900 hover:bg-zinc-100",
-                            !isSelected && today && "bg-zinc-100 font-bold",
-                            !isSelected && !inMonth && "text-zinc-400"
+                            isSelected ? "text-white" : "text-brand-black hover:bg-brand-gray",
+                            !isSelected && today && "bg-brand-yellow/20 text-brand-black font-bold",
+                            !isSelected && !inMonth && "text-brand-black/40"
                           )}
                         >
                           {isSelected && (
                             <motion.div
                               layoutId="active-date-bg"
-                              className="absolute inset-1 bg-zinc-900 rounded-xl z-0"
+                              className="absolute inset-1 bg-brand-blue rounded-xl z-0 shadow-lg shadow-brand-blue/30"
                               transition={TRANSITION}
                             />
+                          )}
+                          {!isSelected && today && (
+                            <div className="absolute inset-1 bg-brand-yellow rounded-xl z-0" />
                           )}
                           <span className={cn("relative z-10 font-medium", isSelected && "font-bold")}>
                             {format(date, "d")}
@@ -192,7 +195,7 @@ export function DashboardClient({ userName, bookings, selectedDate }: any) {
                             <span
                               className={cn(
                                 "relative z-10 w-1 h-1 rounded-full mt-0.5",
-                                isSelected ? "bg-white/80" : "bg-zinc-400"
+                                isSelected ? "bg-white/80" : "bg-brand-black/20"
                               )}
                             />
                           )}
@@ -209,11 +212,11 @@ export function DashboardClient({ userName, bookings, selectedDate }: any) {
               {view === "daily" && (
                 <motion.div
                   key="daily-view"
-                  initial={{ opacity: 0, y: 20, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 40, scale: 0.98 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 40 }}
                   transition={{ ...TRANSITION, delay: 0.1 }}
-                  className="mt-4"
+                  className="mt-4 pt-4 border-t border-brand-gray"
                 >
                   <DailyView bookings={bookings} selectedDate={activeDate} />
                 </motion.div>
