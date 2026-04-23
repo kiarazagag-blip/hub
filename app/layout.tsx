@@ -20,6 +20,23 @@ const polin = localFont({
 export const metadata: Metadata = {
   title: "הזמנת חדר ישיבות",
   description: "מערכת הזמנת חדר ישיבות מודרנית",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "MeetingRoom",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+}
+
+export const viewport = {
+  themeColor: "#202020",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
 
 export default function RootLayout({
