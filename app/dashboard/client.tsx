@@ -18,7 +18,8 @@ import {
 import { he } from "date-fns/locale"
 import { Navbar } from "@/components/navbar"
 import { DailyView } from "@/components/daily-view"
-import { ChevronRight, ChevronLeft, Calendar as CalendarIcon } from "lucide-react"
+import { ChevronRight, ChevronLeft, Calendar as CalendarIcon, Plus } from "lucide-react"
+import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
@@ -99,7 +100,7 @@ export function DashboardClient({
           {/* Header Section */}
           <div className="flex items-center justify-between mb-6">
             <button
-              onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(1))}
+              onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(-1))}
               className="p-2 rounded-xl hover:bg-white transition-colors text-brand-black/60"
             >
               {view === "daily" ? <CalendarIcon className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
@@ -123,7 +124,7 @@ export function DashboardClient({
             </motion.div>
 
             <button
-              onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(-1))}
+              onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(1))}
               className="p-2 rounded-xl hover:bg-white transition-colors text-brand-black/60"
             >
               {view === "daily" ? <span className="text-xs font-bold px-2">סגור</span> : <ChevronLeft className="w-5 h-5" />}
@@ -239,6 +240,13 @@ export function DashboardClient({
           </div>
         </div>
       </main>
+      {/* Floating Action Button */}
+      <Link
+        href={`/book?date=${format(activeDate, "yyyy-MM-dd")}`}
+        className="fixed bottom-6 left-6 w-14 h-14 bg-brand-blue text-white rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 active:scale-95 z-50 hover:bg-brand-blue/90"
+      >
+        <Plus className="w-8 h-8" />
+      </Link>
     </div>
   )
 }

@@ -59,16 +59,6 @@ export function Navbar({ userName, currentView, onViewChange, selectedDate }: Na
             )
           })}
 
-          <Link
-            href={selectedDate ? `/book?date=${format(selectedDate, "yyyy-MM-dd")}` : "/book"}
-            className={cn(
-              "flex items-center gap-1.5 ml-2 px-3 py-1.5 rounded-xl text-sm font-bold transition-all bg-brand-blue text-white hover:bg-brand-blue/90",
-              pathname === "/book" && "ring-2 ring-brand-blue ring-offset-1"
-            )}
-          >
-            <Plus className="w-3.5 h-3.5" />
-            הזמן
-          </Link>
         </nav>
 
         <div className="flex items-center gap-2">
