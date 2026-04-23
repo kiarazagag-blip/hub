@@ -49,8 +49,8 @@ export default function LoginPage() {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-10">
-          <div className="w-12 h-12 bg-zinc-900 rounded-2xl flex items-center justify-center mb-4">
-            <CalendarDays className="w-6 h-6 text-white" />
+          <div className="w-16 h-16 flex items-center justify-center mb-4">
+            <img src="/logo-login.png" alt="HUBbooking" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-2xl font-bold text-zinc-900">ברוך שובך</h1>
           <p className="text-sm text-zinc-500 mt-1">התחבר כדי לנהל הזמנות</p>

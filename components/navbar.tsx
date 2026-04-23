@@ -28,7 +28,7 @@ export function Navbar({ userName, currentView, onViewChange, selectedDate }: Na
       <div className="w-full max-w-none px-4 md:px-8 h-16 flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center transition-transform hover:scale-105 active:scale-95 group">
           <div className="w-10 h-10 flex items-center justify-center">
-            <img src="/logo.png" alt="HUBbooking" className="w-full h-full object-contain" />
+            <img src="/logo-header.png" alt="HUBbooking" className="w-full h-full object-contain" />
           </div>
         </Link>
 
