@@ -77,7 +77,7 @@ export function DashboardClient({ userName, bookings, selectedDate }: any) {
   const DAY_NAMES = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"]
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen bg-white">
       <Navbar userName={userName} currentView={view} onViewChange={setView} selectedDate={activeDate} />
 
       <main className="max-w-2xl mx-auto px-4 py-8">

@@ -32,12 +32,17 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
   const getBookingStyle = (booking: Booking) => {
     const start = new Date(booking.startTime)
     const end = new Date(booking.endTime)
-    const startMinutes = (start.getHours() - 8) * 60 + start.getMinutes()
-    const durationMinutes = (end.getTime() - start.getTime()) / 60000
+    
+    // Use decimal hours for precise positioning
+    const startDecimal = start.getHours() + start.getMinutes() / 60
+    const endDecimal = end.getHours() + end.getMinutes() / 60
+    
+    const topMinutes = (startDecimal - 8) * 60
+    const durationMinutes = (endDecimal - startDecimal) * 60
 
     return {
-      top: `${(startMinutes / 60) * HOUR_HEIGHT + 3}px`,
-      height: `${Math.max((durationMinutes / 60) * HOUR_HEIGHT - 5, 36)}px`,
+      top: `${(topMinutes / 60) * HOUR_HEIGHT}px`,
+      height: `${Math.max((durationMinutes / 60) * HOUR_HEIGHT - 2, 28)}px`,
     }
   }
 
@@ -87,26 +92,23 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
             return (
               <div
                 key={booking.id}
-                className="absolute left-1 right-1 bg-zinc-900 rounded-xl px-2.5 py-2 overflow-hidden shadow-sm border border-zinc-800 transition-colors hover:bg-zinc-800"
+                className="absolute left-1 right-1 bg-zinc-900 rounded-xl px-3 py-1.5 overflow-hidden shadow-sm border border-zinc-800 transition-colors hover:bg-zinc-800 flex flex-col justify-center"
                 style={getBookingStyle(booking)}
               >
-                <div className="flex flex-col h-full justify-between">
-                  <div>
-                    <p className="text-white text-xs font-bold truncate">
-                      {booking.name}
-                    </p>
-                    {!isCompact && (
-                      <p className="text-white/60 text-[10px] mt-0.5 flex items-center gap-1 truncate">
-                        <Phone className="w-2.5 h-2.5 opacity-50" />
-                        {booking.phone}
-                      </p>
-                    )}
-                  </div>
-                  <p className="text-white/80 text-[10px] font-medium flex items-center gap-1 mt-auto">
-                    <Clock className="w-2.5 h-2.5 opacity-50" />
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-white text-[13px] font-bold truncate">
+                    {booking.name}
+                  </p>
+                  <p className="text-white/70 text-[10px] font-medium shrink-0 flex items-center gap-1">
                     {format(start, "HH:mm")} – {format(end, "HH:mm")}
                   </p>
                 </div>
+                {!isCompact && (
+                  <p className="text-white/50 text-[10px] mt-0.5 flex items-center gap-1 truncate">
+                    <Phone className="w-2.5 h-2.5 opacity-40" />
+                    {booking.phone}
+                  </p>
+                )}
               </div>
             )
           })}
