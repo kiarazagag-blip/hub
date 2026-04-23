@@ -35,11 +35,15 @@ export function DashboardClient({
   userName, 
   bookings, 
   selectedDate, 
+  prevDate,
+  nextDate,
   initialView = "monthly" 
 }: { 
   userName?: string | null; 
   bookings: any; 
   selectedDate: Date; 
+  prevDate: Date;
+  nextDate: Date;
   initialView?: "daily" | "monthly" 
 }) {
   const [view, setView] = useState<"daily" | "monthly">(initialView)
