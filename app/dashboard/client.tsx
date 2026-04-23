@@ -1,28 +1,67 @@
 "use client"
 
-import { useState } from "react"
-import { format, addDays, subDays } from "date-fns"
+import { useState, useMemo } from "react"
+import {
+  format,
+  addDays,
+  subDays,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  isSameMonth,
+  isSameDay,
+  isToday,
+  addMonths,
+  subMonths,
+} from "date-fns"
 import { he } from "date-fns/locale"
 import { Navbar } from "@/components/navbar"
 import { DailyView } from "@/components/daily-view"
-import { MonthlyView } from "@/components/monthly-view"
-import { ChevronRight, ChevronLeft } from "lucide-react"
-import Link from "next/link"
+import { ChevronRight, ChevronLeft, Calendar as CalendarIcon } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { cn } from "@/lib/utils"
 
-export function DashboardClient({
-  userName,
-  bookings,
-  selectedDate,
-  prevDate,
-  nextDate,
-}: any) {
-  const [view, setView] = useState<"daily" | "monthly">("daily")
+const TRANSITION = {
+  type: "spring",
+  stiffness: 300,
+  damping: 30,
+  mass: 1,
+  duration: 0.4,
+  ease: [0.4, 0, 0.2, 1], // iOS Standard "Fast Out, Slow In"
+}
+
+export function DashboardClient({ userName, bookings, selectedDate }: any) {
+  const [view, setView] = useState<"daily" | "monthly">("monthly")
   const [activeDate, setActiveDate] = useState<Date>(new Date(selectedDate))
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date(selectedDate))
 
-  const dayCount = bookings.filter((b: any) => {
-    const d = new Date(b.startTime)
-    return d.toDateString() === activeDate.toDateString()
-  }).length
+  // Generate weeks for the current month
+  const weeks = useMemo(() => {
+    const monthStart = startOfMonth(currentMonth)
+    const monthEnd = endOfMonth(currentMonth)
+    const calStart = startOfWeek(monthStart, { weekStartsOn: 0 })
+    const calEnd = endOfWeek(monthEnd, { weekStartsOn: 0 })
+
+    const weeks: Date[][] = []
+    let day = calStart
+    while (day <= calEnd) {
+      const week: Date[] = []
+      for (let i = 0; i < 7; i++) {
+        week.push(day)
+        day = addDays(day, 1)
+      }
+      weeks.push(week)
+    }
+    return weeks
+  }, [currentMonth])
+
+  // Find index of the week containing the active date
+  const anchorWeekIndex = useMemo(() => {
+    return weeks.findIndex((week) =>
+      week.some((day) => isSameDay(day, activeDate))
+    )
+  }, [weeks, activeDate])
 
   const handleDateSelect = (date: Date) => {
     setActiveDate(date)
@@ -30,72 +69,144 @@ export function DashboardClient({
     window.history.replaceState(null, "", `/dashboard?date=${format(date, "yyyy-MM-dd")}`)
   }
 
-  const handlePrevDay = () => {
-    const newDate = subDays(activeDate, 1)
-    setActiveDate(newDate)
-    window.history.replaceState(null, "", `/dashboard?date=${format(newDate, "yyyy-MM-dd")}`)
+  const handleMonthChange = (offset: number) => {
+    const next = offset > 0 ? addMonths(currentMonth, 1) : subMonths(currentMonth, 1)
+    setCurrentMonth(next)
   }
 
-  const handleNextDay = () => {
-    const newDate = addDays(activeDate, 1)
-    setActiveDate(newDate)
-    window.history.replaceState(null, "", `/dashboard?date=${format(newDate, "yyyy-MM-dd")}`)
-  }
+  const DAY_NAMES = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"]
 
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar userName={userName} currentView={view} onViewChange={setView} />
+    <div className="min-h-screen bg-white overflow-x-hidden">
+      <Navbar userName={userName} currentView={view} onViewChange={setView} selectedDate={activeDate} />
 
       <main className="max-w-2xl mx-auto px-4 py-8">
-        {view === "daily" ? (
-          <div key="daily" className="animate-in zoom-in-95 fade-in duration-300 ease-out">
-            <div className="flex items-center justify-between mb-8">
-              <button
-                onClick={handleNextDay}
-                className="p-2 rounded-xl hover:bg-zinc-100 transition-colors text-zinc-500"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
+        <div className="flex flex-col">
+          {/* Header Section */}
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(1))}
+              className="p-2 rounded-xl hover:bg-zinc-100 transition-colors text-zinc-600"
+            >
+              {view === "daily" ? <CalendarIcon className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+            </button>
 
-              <div className="text-center">
-                <h1 className="text-xl font-bold text-zinc-900">
-                  {format(activeDate, "EEEE", { locale: he })}
-                </h1>
-                <p className="text-sm text-zinc-500">
-                  {format(activeDate, "d MMMM yyyy", { locale: he })}
-                </p>
-                {dayCount > 0 && (
-                  <span className="inline-block mt-1 text-xs font-medium text-zinc-900 bg-zinc-100 rounded-full px-2.5 py-0.5">
-                    {dayCount} {dayCount === 1 ? "הזמנה" : "הזמנות"}
-                  </span>
-                )}
-              </div>
-
-              <button
-                onClick={handlePrevDay}
-                className="p-2 rounded-xl hover:bg-zinc-100 transition-colors text-zinc-500"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-            </div>
-
-            <DailyView bookings={bookings} selectedDate={activeDate} />
-          </div>
-        ) : (
-          <div key="monthly" className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
-            <div className="mb-8">
-              <h1 className="text-xl font-bold text-zinc-900">סקירה חודשית</h1>
-              <p className="text-sm text-zinc-500 mt-1">
-                {bookings.length} {bookings.length === 1 ? "הזמנה" : "הזמנות"} בסך הכל
+            <motion.div
+              layout
+              className="text-center"
+              transition={TRANSITION}
+            >
+              <h1 className="text-xl font-bold text-zinc-900">
+                {view === "daily"
+                  ? format(activeDate, "EEEE", { locale: he })
+                  : format(currentMonth, "MMMM yyyy", { locale: he })}
+              </h1>
+              <p className="text-sm text-zinc-500">
+                {view === "daily"
+                  ? format(activeDate, "d MMMM yyyy", { locale: he })
+                  : `${bookings.length} הזמנות החודש`}
               </p>
-            </div>
-            <MonthlyView
-              bookings={bookings}
-              selectedDate={activeDate}
-              onDateSelect={handleDateSelect}
-            />
+            </motion.div>
+
+            <button
+              onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(-1))}
+              className="p-2 rounded-xl hover:bg-zinc-100 transition-colors text-zinc-600"
+            >
+              {view === "daily" ? <span className="text-xs font-semibold px-2">סגור</span> : <ChevronLeft className="w-5 h-5" />}
+            </button>
           </div>
-        )}
+
+          {/* Calendar Grid */}
+          <div className="relative">
+            {/* Day Labels */}
+            <motion.div
+              layout
+              className="grid grid-cols-7 mb-2 border-b border-zinc-50"
+            >
+              {DAY_NAMES.map((d) => (
+                <div key={d} className="text-center text-[10px] font-bold text-zinc-400 py-2 uppercase tracking-tighter">
+                  {d}
+                </div>
+              ))}
+            </motion.div>
+
+            {/* Weeks Container */}
+            <div className="space-y-1">
+              {weeks.map((week, wi) => {
+                const isAnchor = wi === anchorWeekIndex
+                const isAbove = wi < anchorWeekIndex
+                const isDaily = view === "daily"
+
+                return (
+                  <motion.div
+                    key={wi}
+                    layout
+                    initial={false}
+                    animate={{
+                      y: isDaily ? (isAbove ? -200 : (isAnchor ? 0 : 400)) : 0,
+                      opacity: isDaily ? (isAnchor ? 1 : 0) : 1,
+                      height: isDaily ? (isAnchor ? "auto" : 0) : "auto",
+                      marginBottom: isDaily ? (isAnchor ? 24 : 0) : 4,
+                    }}
+                    transition={TRANSITION}
+                    className={cn(
+                      "grid grid-cols-7 gap-1 overflow-hidden",
+                      isDaily && !isAnchor && "pointer-events-none"
+                    )}
+                  >
+                    {week.map((date, di) => {
+                      const inMonth = isSameMonth(date, currentMonth)
+                      const isSelected = isSameDay(date, activeDate)
+                      const count = bookings.filter((b: any) => isSameDay(new Date(b.startTime), date)).length
+                      const today = isToday(date)
+
+                      return (
+                        <button
+                          key={di}
+                          onClick={() => handleDateSelect(date)}
+                          className={cn(
+                            "relative aspect-square flex flex-col items-center justify-center rounded-2xl text-sm transition-all duration-300",
+                            !inMonth && "opacity-25",
+                            isSelected && "bg-zinc-900 text-white shadow-lg scale-110 z-10",
+                            !isSelected && today && "bg-zinc-100 font-semibold text-zinc-900",
+                            !isSelected && !today && inMonth && "hover:bg-zinc-50 text-zinc-900",
+                            !isSelected && !today && !inMonth && "text-zinc-400"
+                          )}
+                        >
+                          <span className="text-sm font-medium">{format(date, "d")}</span>
+                          {count > 0 && (
+                            <span
+                              className={cn(
+                                "absolute bottom-1.5 w-1 h-1 rounded-full",
+                                isSelected ? "bg-white" : "bg-zinc-900"
+                              )}
+                            />
+                          )}
+                        </button>
+                      )
+                    })}
+                  </motion.div>
+                )
+              })}
+            </div>
+
+            {/* Daily View Accordion */}
+            <AnimatePresence mode="wait">
+              {view === "daily" && (
+                <motion.div
+                  key="daily-view"
+                  initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 40, scale: 0.98 }}
+                  transition={{ ...TRANSITION, delay: 0.1 }}
+                  className="mt-4"
+                >
+                  <DailyView bookings={bookings} selectedDate={activeDate} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
       </main>
     </div>
   )

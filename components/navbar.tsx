@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { signOut } from "next-auth/react"
+import { format } from "date-fns"
 import { CalendarDays, LayoutGrid, Plus, LogOut } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -10,9 +11,10 @@ interface NavbarProps {
   userName?: string | null
   currentView?: "daily" | "monthly"
   onViewChange?: (view: "daily" | "monthly") => void
+  selectedDate?: Date
 }
 
-export function Navbar({ userName, currentView, onViewChange }: NavbarProps) {
+export function Navbar({ userName, currentView, onViewChange, selectedDate }: NavbarProps) {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -58,7 +60,7 @@ export function Navbar({ userName, currentView, onViewChange }: NavbarProps) {
           })}
 
           <Link
-            href="/book"
+            href={selectedDate ? `/book?date=${format(selectedDate, "yyyy-MM-dd")}` : "/book"}
             className={cn(
               "flex items-center gap-1.5 ml-2 px-3 py-1.5 rounded-xl text-sm font-medium transition-all bg-zinc-900 text-white hover:bg-zinc-800",
               pathname === "/book" && "bg-zinc-700"
