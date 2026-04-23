@@ -22,7 +22,7 @@ interface DailyViewProps {
 const HOUR_HEIGHT = 80
 
 export function DailyView({ bookings, selectedDate }: DailyViewProps) {
-  const hours = Array.from({ length: 13 }, (_, i) => i + 8)
+  const hours = Array.from({ length: 16 }, (_, i) => i + 8)
 
   const dayBookings = useMemo(
     () => bookings.filter((b) => isSameDay(new Date(b.startTime), selectedDate)),
@@ -55,7 +55,7 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
         </div>
       )}
 
-      <div className="relative border-r border-zinc-100/50 mr-14" style={{ height: `${12 * HOUR_HEIGHT}px` }}>
+      <div className="relative border-r border-zinc-100/50 mr-14" style={{ height: `${(hours.length - 1) * HOUR_HEIGHT}px` }}>
         {hours.map((hour) => (
           <div
             key={hour}
