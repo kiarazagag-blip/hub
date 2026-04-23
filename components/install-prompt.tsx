@@ -10,6 +10,11 @@ export function InstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
 
   useEffect(() => {
+    // 0. Register Service Worker for Android Installability
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(err => console.log("SW failed", err))
+    }
+
     // 1. Detect Platform
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
     const isAndroid = /Android/.test(navigator.userAgent)
