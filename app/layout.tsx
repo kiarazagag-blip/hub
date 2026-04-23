@@ -26,6 +26,10 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "HUBbooking",
   },
+  icons: {
+    icon: "/logo-app.png",
+    apple: "/logo-app.png",
+  },
   formatDetection: {
     telephone: false,
   },
