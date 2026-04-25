@@ -150,9 +150,9 @@ export function DashboardClient({
           </div>
 
           {/* Calendar Grid - With Hard Clip */}
-          <div className="relative overflow-hidden pt-4">
+          <div className="relative overflow-hidden flex-1 min-h-[60vh]">
             {/* Weeks Container */}
-            <div className="space-y-2">
+            <div className="space-y-4 pt-4 pb-20">
               {weeks.map((week, wi) => {
                 const isAnchor = wi === anchorWeekIndex
                 const isAbove = wi < anchorWeekIndex
@@ -164,14 +164,14 @@ export function DashboardClient({
                     layout
                     initial={false}
                     animate={{
-                      y: isDaily ? (isAbove ? -400 : (isAnchor ? 0 : 800)) : 0,
+                      y: isDaily ? (isAbove ? -600 : (isAnchor ? 0 : 1000)) : 0,
                       opacity: isDaily ? (isAnchor ? 1 : 0) : 1,
                       height: isDaily ? (isAnchor ? "auto" : 0) : "auto",
-                      marginBottom: isDaily ? (isAnchor ? 32 : 0) : 8,
+                      marginBottom: isDaily ? (isAnchor ? 40 : 0) : 0,
                     }}
                     transition={TRANSITION}
                     className={cn(
-                      "grid grid-cols-7 gap-2",
+                      "grid grid-cols-7 gap-x-2",
                       isDaily && !isAnchor && "pointer-events-none"
                     )}
                   >
@@ -192,29 +192,34 @@ export function DashboardClient({
                             }
                           }}
                           className={cn(
-                            "relative aspect-[1/1.4] flex flex-col items-center justify-start pt-4 rounded-2xl text-lg transition-all duration-200",
-                            isSelected ? "text-white" : "text-brand-black hover:bg-white",
-                            !isSelected && today && "bg-brand-yellow/30 text-brand-black font-extrabold",
-                            !isSelected && !inMonth && "text-brand-black/40"
+                            "relative aspect-[1/1.5] flex flex-col items-center justify-start group transition-all duration-200",
+                            !inMonth && "text-brand-black/20"
                           )}
                         >
-                          {isSelected && (
-                            <motion.div
-                              layoutId="active-date-bg"
-                              className="absolute inset-1 bg-brand-blue rounded-xl z-0"
-                              transition={TRANSITION}
-                            />
-                          )}
-                          {!isSelected && today && (
-                            <div className="absolute inset-1 bg-brand-yellow rounded-xl z-0" />
-                          )}
-                          <span className={cn("relative z-10 font-medium", isSelected && "font-bold")}>
-                            {format(date, "d")}
-                          </span>
+                          <div className="relative w-full aspect-square flex flex-col items-center justify-center">
+                            {isSelected && (
+                              <motion.div
+                                layoutId="active-date-bg"
+                                className="absolute inset-0 bg-brand-blue rounded-2xl z-0 shadow-lg shadow-brand-blue/20"
+                                transition={TRANSITION}
+                              />
+                            )}
+                            {!isSelected && today && (
+                              <div className="absolute inset-0 bg-brand-yellow/30 rounded-2xl z-0" />
+                            )}
+                            <span className={cn(
+                              "relative z-10 text-lg transition-all",
+                              isSelected ? "text-white font-bold" : "text-brand-black font-medium",
+                              today && !isSelected && "text-brand-black font-bold"
+                            )}>
+                              {format(date, "d")}
+                            </span>
+                          </div>
+                          
                           {hasBooking && (
                             <span
                               className={cn(
-                                "relative z-10 w-1 h-1 rounded-full mt-0.5",
+                                "w-1.5 h-1.5 rounded-full mt-2 transition-colors",
                                 isSelected ? "bg-white/80" : "bg-brand-black/20"
                               )}
                             />
@@ -225,6 +230,7 @@ export function DashboardClient({
                   </motion.div>
                 )
               })}
+            </div>
             </div>
 
             {/* Daily View Accordion */}
