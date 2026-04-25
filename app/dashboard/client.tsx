@@ -102,8 +102,8 @@ export function DashboardClient({
       <main className="w-full max-w-4xl mx-auto px-4 py-8">
         <div className="flex flex-col">
           {/* Header Section */}
-          <div className="sticky top-0 bg-brand-gray z-20 pb-4">
-            <div className="flex items-center justify-between mb-6">
+          <div className="sticky top-0 bg-brand-gray z-30">
+            <div className="flex items-center justify-between py-6">
               <button
                 onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(-1))}
                 className="p-2 rounded-xl hover:bg-white transition-colors text-brand-black/60"
@@ -111,22 +111,22 @@ export function DashboardClient({
                 {view === "daily" ? <CalendarIcon className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
               </button>
 
-            <motion.div
-              layout
-              className="text-center"
-              transition={TRANSITION}
-            >
-              <h1 className="text-xl font-bold text-brand-black">
-                {view === "daily"
-                  ? format(activeDate, "EEEE", { locale: he })
-                  : format(currentMonth, "MMMM yyyy", { locale: he })}
-              </h1>
-              <p className="text-sm text-brand-black/50">
-                {view === "daily"
-                  ? format(activeDate, "d MMMM yyyy", { locale: he })
-                  : `${bookings.length} הזמנות החודש`}
-              </p>
-            </motion.div>
+              <motion.div
+                layout
+                className="text-center"
+                transition={TRANSITION}
+              >
+                <h1 className="text-2xl font-bold text-brand-black tracking-tight">
+                  {view === "daily"
+                    ? format(activeDate, "EEEE", { locale: he })
+                    : format(currentMonth, "MMMM yyyy", { locale: he })}
+                </h1>
+                <p className="text-sm font-bold text-brand-black/40">
+                  {view === "daily"
+                    ? format(activeDate, "d MMMM yyyy", { locale: he })
+                    : `${bookings.length} הזמנות`}
+                </p>
+              </motion.div>
 
               <button
                 onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(1))}
@@ -135,14 +135,11 @@ export function DashboardClient({
                 {view === "daily" ? <span className="text-xs font-bold px-2">סגור</span> : <ChevronLeft className="w-5 h-5" />}
               </button>
             </div>
-          </div>
-
-          {/* Calendar Grid */}
-          <div className="relative">
-            {/* Day Labels */}
+            
+            {/* Day Labels - Now inside sticky for better context */}
             <motion.div
               layout
-              className="grid grid-cols-7 mb-4 border-b border-brand-black/5 pb-2"
+              className="grid grid-cols-7 border-b border-brand-black/5 pb-4"
             >
               {DAY_NAMES.map((d) => (
                 <div key={d} className="text-center text-[12px] font-bold text-brand-black/40 uppercase tracking-widest">
@@ -150,9 +147,12 @@ export function DashboardClient({
                 </div>
               ))}
             </motion.div>
+          </div>
 
+          {/* Calendar Grid - With Hard Clip */}
+          <div className="relative overflow-hidden pt-4">
             {/* Weeks Container */}
-            <div className="space-y-1">
+            <div className="space-y-2">
               {weeks.map((week, wi) => {
                 const isAnchor = wi === anchorWeekIndex
                 const isAbove = wi < anchorWeekIndex
@@ -164,14 +164,14 @@ export function DashboardClient({
                     layout
                     initial={false}
                     animate={{
-                      y: isDaily ? (isAbove ? -200 : (isAnchor ? 0 : 400)) : 0,
+                      y: isDaily ? (isAbove ? -400 : (isAnchor ? 0 : 800)) : 0,
                       opacity: isDaily ? (isAnchor ? 1 : 0) : 1,
                       height: isDaily ? (isAnchor ? "auto" : 0) : "auto",
-                      marginBottom: isDaily ? (isAnchor ? 24 : 0) : 4,
+                      marginBottom: isDaily ? (isAnchor ? 32 : 0) : 8,
                     }}
                     transition={TRANSITION}
                     className={cn(
-                      "grid grid-cols-7 gap-1 overflow-hidden",
+                      "grid grid-cols-7 gap-2",
                       isDaily && !isAnchor && "pointer-events-none"
                     )}
                   >
@@ -192,7 +192,7 @@ export function DashboardClient({
                             }
                           }}
                           className={cn(
-                            "relative aspect-[1/1.1] flex flex-col items-center justify-center rounded-2xl text-base transition-all duration-200",
+                            "relative aspect-[1/1.4] flex flex-col items-center justify-start pt-4 rounded-2xl text-lg transition-all duration-200",
                             isSelected ? "text-white" : "text-brand-black hover:bg-white",
                             !isSelected && today && "bg-brand-yellow/30 text-brand-black font-extrabold",
                             !isSelected && !inMonth && "text-brand-black/40"
