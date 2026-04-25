@@ -22,10 +22,10 @@ export function InstallPrompt() {
 
     if (isStandalone) return // Already installed
 
-    // 2. Check if dismissed recently
-    const dismissed = localStorage.getItem("install-prompt-dismissed")
-    const oneDay = 24 * 60 * 60 * 1000
-    if (dismissed && Date.now() - parseInt(dismissed) < oneDay) return
+    // 2. Check if dismissed recently (Disabled for testing)
+    // const dismissed = localStorage.getItem("install-prompt-dismissed")
+    // const oneDay = 24 * 60 * 60 * 1000
+    // if (dismissed && Date.now() - parseInt(dismissed) < oneDay) return
 
     setPlatform(isIOS ? "ios" : isAndroid ? "android" : "other")
 
@@ -39,8 +39,8 @@ export function InstallPrompt() {
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
 
     // 4. Show Prompt after a short delay
-    if (isIOS || isAndroid) {
-      const timer = setTimeout(() => setShow(true), 2000)
+    if (isIOS || isAndroid || true) { // Forced for testing
+      const timer = setTimeout(() => setShow(true), 1000)
       return () => clearTimeout(timer)
     }
 
