@@ -58,7 +58,9 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-black/10" />
       </div>
 
-      <div className="w-full max-w-sm relative z-10 bg-white/5 backdrop-blur-2xl p-8 rounded-[40px] border border-white/10 shadow-2xl">
+      <div className="w-full max-w-sm relative z-10 bg-[#ecfdf5]/10 backdrop-blur-md p-8 rounded-[40px] border border-white/20 shadow-2xl overflow-hidden group">
+        {/* Subtle glass edge highlight */}
+        <div className="absolute inset-0 border border-white/10 rounded-[40px] pointer-events-none" />
         <div className="flex flex-col items-center mb-10">
           <div className="w-20 h-20 flex items-center justify-center mb-6">
             <img src="/logo-login.png" alt="HUBbooking" className="w-full h-full object-contain drop-shadow-2xl" />
