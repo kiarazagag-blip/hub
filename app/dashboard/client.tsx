@@ -202,7 +202,7 @@ export function DashboardClient({
                             )}
                             <span className={cn(
                               "relative z-10 text-lg transition-all",
-                              isSelected ? "text-white font-bold" : "text-brand-black font-medium",
+                              isSelected ? "text-white font-bold" : (inMonth ? "text-brand-black font-medium" : "text-brand-black/15 font-medium"),
                               today && !isSelected && "text-brand-black font-bold"
                             )}>
                               {format(date, "d")}
