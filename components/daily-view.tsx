@@ -49,7 +49,7 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
   return (
     <div className="w-full relative select-none">
       {dayBookings.length === 0 && (
-        <div className="text-center py-16 text-zinc-400">
+        <div className="text-center py-10 text-brand-black/30">
           <Clock className="w-8 h-8 mx-auto mb-3 opacity-30" />
           <p className="text-sm font-medium">אין הזמנות ביום זה</p>
         </div>

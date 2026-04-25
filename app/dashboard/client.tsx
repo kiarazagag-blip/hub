@@ -102,7 +102,7 @@ export function DashboardClient({
       <main className="w-full max-w-4xl mx-auto px-4 py-8">
         <div className="flex flex-col">
           {/* Header Section */}
-          <div className="sticky top-0 bg-brand-gray z-40 pb-4">
+          <div className="bg-brand-gray z-30 pb-4">
             <div className="flex items-center justify-between pt-6 mb-2">
               <button
                 onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(-1))}
@@ -186,7 +186,7 @@ export function DashboardClient({
                           }}
                           className={cn(
                             "relative aspect-[1/1.5] flex flex-col items-center justify-start group transition-all duration-200",
-                            !inMonth && "text-brand-black/20"
+                            !inMonth && "text-brand-black/15"
                           )}
                         >
                           <div className="relative w-11 h-11 flex flex-col items-center justify-center shrink-0">
