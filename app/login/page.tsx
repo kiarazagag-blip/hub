@@ -61,7 +61,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 border border-white/10 rounded-[40px] pointer-events-none" />
         <div className="flex flex-col items-center mb-10">
           <div className="w-20 h-20 flex items-center justify-center mb-6">
-            <img src="/logo-login.png" alt="HUBbooking" className="w-full h-full object-contain drop-shadow-2xl brightness-0" />
+            <img src="/logo-login.png" alt="HUBbooking" className="w-full h-full object-contain rounded-xl drop-shadow-2xl" />
           </div>
           <h1 className="text-3xl font-bold text-brand-black tracking-tight">ברוך שובך</h1>
           <p className="text-sm text-brand-black/60 mt-2 font-medium">התחבר כדי לנהל הזמנות</p>

@@ -99,7 +99,7 @@ export function DashboardClient({
     <div className="min-h-screen bg-brand-gray">
       <Navbar userName={userName} currentView={view} onViewChange={setView} selectedDate={activeDate} />
 
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main className="w-full max-w-4xl mx-auto px-4 py-8">
         <div className="flex flex-col">
           {/* Header Section */}
           <div className="flex items-center justify-between mb-6">
@@ -136,7 +136,7 @@ export function DashboardClient({
           </div>
 
           {/* Calendar Grid */}
-          <div className="bg-white rounded-3xl p-4 border border-brand-black/5 relative">
+          <div className="relative">
             {/* Day Labels */}
             <motion.div
               layout
@@ -235,7 +235,7 @@ export function DashboardClient({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 40 }}
                   transition={{ ...TRANSITION, delay: 0.1 }}
-                  className="mt-4 pt-4 border-t border-brand-gray"
+                  className="mt-4 pt-4 border-t border-brand-black/5"
                 >
                   <DailyView bookings={bookings} selectedDate={activeDate} />
                 </motion.div>
