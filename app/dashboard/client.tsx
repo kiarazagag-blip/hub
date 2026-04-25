@@ -157,9 +157,9 @@ export function DashboardClient({
           </div>
 
           {/* Calendar Grid - With Hard Clip */}
-          <div className="relative overflow-hidden flex-1 min-h-[75vh]">
+          <div className="relative overflow-hidden pt-4">
             {/* Weeks Container */}
-            <div className="h-full flex flex-col pt-2 pb-6">
+            <div className="space-y-4">
               {weeks.map((week, wi) => {
                 const isAnchor = wi === anchorWeekIndex
                 const isAbove = wi < anchorWeekIndex
@@ -173,12 +173,12 @@ export function DashboardClient({
                     animate={{
                       y: isDaily ? (isAbove ? -800 : (isAnchor ? 0 : 1200)) : 0,
                       opacity: isDaily ? (isAnchor ? 1 : 0) : 1,
-                      height: isDaily ? (isAnchor ? "auto" : 0) : "100%",
-                      marginBottom: isDaily ? (isAnchor ? 40 : 0) : 0,
+                      height: isDaily ? (isAnchor ? "auto" : 0) : "auto",
+                      marginBottom: isDaily ? (isAnchor ? 32 : 0) : 12,
                     }}
                     transition={TRANSITION}
                     className={cn(
-                      "grid grid-cols-7 gap-x-2 flex-1",
+                      "grid grid-cols-7 gap-x-2",
                       isDaily && !isAnchor && "pointer-events-none"
                     )}
                   >
@@ -199,7 +199,7 @@ export function DashboardClient({
                             }
                           }}
                           className={cn(
-                            "relative h-full flex flex-col items-center justify-start py-2 group transition-all duration-200",
+                            "relative aspect-[1/1.6] flex flex-col items-center justify-start group transition-all duration-200",
                             !inMonth && "text-brand-black/30"
                           )}
                         >
@@ -212,7 +212,7 @@ export function DashboardClient({
                               />
                             )}
                             {!isSelected && today && (
-                              <div className="absolute inset-0 bg-brand-yellow/20 rounded-2xl z-0" />
+                              <div className="absolute inset-0 bg-brand-yellow/30 rounded-2xl z-0" />
                             )}
                             <span className={cn(
                               "relative z-10 text-lg transition-all",
@@ -227,7 +227,7 @@ export function DashboardClient({
                             <span
                               className={cn(
                                 "w-1.5 h-1.5 rounded-full mt-2 transition-colors",
-                                isSelected ? "bg-white" : "bg-brand-black/20"
+                                isSelected ? "bg-[#BFE9FF]" : "bg-brand-black/20"
                               )}
                             />
                           )}
