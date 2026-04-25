@@ -22,10 +22,10 @@ export function InstallPrompt() {
 
     if (isStandalone) return // Already installed
 
-    // 2. Check if dismissed recently (Disabled for testing)
-    // const dismissed = localStorage.getItem("install-prompt-dismissed")
-    // const oneDay = 24 * 60 * 60 * 1000
-    // if (dismissed && Date.now() - parseInt(dismissed) < oneDay) return
+    // 2. Check if dismissed recently
+    const dismissed = localStorage.getItem("install-prompt-dismissed")
+    const oneDay = 24 * 60 * 60 * 1000
+    if (dismissed && Date.now() - parseInt(dismissed) < oneDay) return
 
     setPlatform(isIOS ? "ios" : isAndroid ? "android" : "other")
 
@@ -39,8 +39,8 @@ export function InstallPrompt() {
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
 
     // 4. Show Prompt after a short delay
-    if (isIOS || isAndroid || true) { // Forced for testing
-      const timer = setTimeout(() => setShow(true), 1000)
+    if (isIOS || isAndroid) {
+      const timer = setTimeout(() => setShow(true), 2000)
       return () => clearTimeout(timer)
     }
 
@@ -62,13 +62,7 @@ export function InstallPrompt() {
   }
 
   return (
-    <>
-      <div className="fixed bottom-2 right-2 z-[200] pointer-events-none opacity-40">
-        <div className="bg-brand-black text-[8px] text-white px-2 py-1 rounded-full font-mono uppercase tracking-widest border border-white/20">
-          HUB: {platform} | {show ? "PROMPT_VISIBLE" : "PROMPT_HIDDEN"} | SW: OK
-        </div>
-      </div>
-      <AnimatePresence>
+    <AnimatePresence>
       {show && (
         <div className="fixed inset-0 z-[100] flex items-end justify-center p-4 sm:items-center pointer-events-none">
           {/* Overlay */}
@@ -133,7 +127,7 @@ export function InstallPrompt() {
               ) : deferredPrompt ? (
                 <button
                   onClick={handleAndroidInstall}
-                  className="w-full bg-brand-black text-white h-14 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-brand-black/90 active:scale-95 transition-all"
+                  className="w-full bg-brand-black text-white h-14 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-brand-black/90 active:scale-[0.98] transition-all"
                 >
                   <Download className="w-5 h-5" />
                   התקן עכשיו
@@ -171,7 +165,6 @@ export function InstallPrompt() {
           </motion.div>
         </div>
       )}
-      </AnimatePresence>
-    </>
+    </AnimatePresence>
   )
 }
