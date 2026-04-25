@@ -140,11 +140,19 @@ export function DashboardClient({
                   </div>
                 ))}
               </div>
-            )}
-          </div>
-
-          {/* Calendar Grid */}
-          <div className="relative overflow-hidden">
+                   {/* Calendar Grid */}
+          <motion.div 
+            className="relative overflow-hidden"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.2}
+            onDragEnd={(_, info) => {
+              if (view === "monthly") {
+                if (info.offset.x > 100) handleMonthChange(-1)
+                else if (info.offset.x < -100) handleMonthChange(1)
+              }
+            }}
+          >
             <div className={cn("transition-all duration-300", view === "monthly" ? "pt-4" : "pt-0")}>
               {weeks.map((week, wi) => {
                 const isAnchor = wi === anchorWeekIndex
@@ -186,7 +194,7 @@ export function DashboardClient({
                           }}
                           className={cn(
                             "relative aspect-[1/1.5] flex flex-col items-center justify-start group transition-all duration-200",
-                            !inMonth && "text-brand-black/15"
+                            !inMonth && "text-brand-black/20"
                           )}
                         >
                           <div className="relative w-11 h-11 flex flex-col items-center justify-center shrink-0">
@@ -198,12 +206,12 @@ export function DashboardClient({
                               />
                             )}
                             {!isSelected && today && (
-                              <div className="absolute inset-0 bg-brand-yellow/30 rounded-2xl z-0" />
+                              <div className="absolute inset-0 bg-[#ffbb0d]/20 rounded-2xl z-0" />
                             )}
                             <span className={cn(
                               "relative z-10 text-lg transition-all",
                               isSelected ? "text-white font-bold" : (inMonth ? "text-brand-black font-medium" : "text-brand-black/15 font-medium"),
-                              today && !isSelected && "text-brand-black font-bold"
+                              today && !isSelected ? "text-[#ffbb0d] font-extrabold" : ""
                             )}>
                               {format(date, "d")}
                             </span>
@@ -240,6 +248,7 @@ export function DashboardClient({
                 </motion.div>
               )}
             </AnimatePresence>
+          </motion.div>
           </div>
         </div>
       </main>
