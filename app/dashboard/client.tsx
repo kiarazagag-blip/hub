@@ -252,7 +252,6 @@ export function DashboardClient({
               )}
             </AnimatePresence>
           </motion.div>
-          </div>
         </div>
       </main>
       {/* Floating Action Button */}
