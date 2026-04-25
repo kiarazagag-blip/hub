@@ -38,8 +38,8 @@ export function InstallPrompt() {
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
 
-    // 4. Show iOS Prompt after a short delay
-    if (isIOS) {
+    // 4. Show Prompt after a short delay
+    if (isIOS || isAndroid) {
       const timer = setTimeout(() => setShow(true), 2000)
       return () => clearTimeout(timer)
     }
@@ -124,7 +124,7 @@ export function InstallPrompt() {
                     <ChevronRight className="w-4 h-4 mr-auto text-brand-black/20" />
                   </div>
                 </div>
-              ) : (
+              ) : deferredPrompt ? (
                 <button
                   onClick={handleAndroidInstall}
                   className="w-full bg-brand-black text-white h-14 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-brand-black/90 active:scale-95 transition-all"
@@ -132,6 +132,30 @@ export function InstallPrompt() {
                   <Download className="w-5 h-5" />
                   התקן עכשיו
                 </button>
+              ) : (
+                <div className="w-full space-y-4">
+                  <div className="flex items-center gap-4 bg-brand-gray/50 p-4 rounded-2xl">
+                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0">
+                      <Smartphone className="w-5 h-5 text-brand-blue" />
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs font-bold text-brand-black">שלב 1</p>
+                      <p className="text-sm text-brand-black/60">לחץ על שלוש הנקודות (תפריט) בדפדפן</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 mr-auto text-brand-black/20" />
+                  </div>
+
+                  <div className="flex items-center gap-4 bg-brand-gray/50 p-4 rounded-2xl">
+                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0">
+                      <PlusSquare className="w-5 h-5 text-brand-blue" />
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs font-bold text-brand-black">שלב 2</p>
+                      <p className="text-sm text-brand-black/60">בחר ב-&quot;התקן אפליקציה&quot;</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 mr-auto text-brand-black/20" />
+                  </div>
+                </div>
               )}
 
               <p className="mt-8 text-[10px] uppercase tracking-widest text-brand-black/20 font-bold">
