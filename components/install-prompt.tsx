@@ -62,7 +62,13 @@ export function InstallPrompt() {
   }
 
   return (
-    <AnimatePresence>
+    <>
+      <div className="fixed bottom-2 right-2 z-[200] pointer-events-none opacity-40">
+        <div className="bg-brand-black text-[8px] text-white px-2 py-1 rounded-full font-mono uppercase tracking-widest border border-white/20">
+          HUB: {platform} | {show ? "PROMPT_VISIBLE" : "PROMPT_HIDDEN"} | SW: OK
+        </div>
+      </div>
+      <AnimatePresence>
       {show && (
         <div className="fixed inset-0 z-[100] flex items-end justify-center p-4 sm:items-center pointer-events-none">
           {/* Overlay */}
@@ -165,6 +171,7 @@ export function InstallPrompt() {
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+      </AnimatePresence>
+    </>
   )
 }

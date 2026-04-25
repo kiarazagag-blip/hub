@@ -52,12 +52,13 @@ export default function LoginPage() {
         <img 
           src="/login-bg.png" 
           alt="Background" 
-          className="w-full h-full object-cover opacity-60 scale-105 animate-pulse-slow" 
+          className="w-full h-full object-cover opacity-100 scale-105" 
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-black/40 via-brand-black/20 to-brand-black/80" />
+        {/* Subtle vignette instead of heavy tint */}
+        <div className="absolute inset-0 bg-black/10" />
       </div>
 
-      <div className="w-full max-w-sm relative z-10 bg-white/10 backdrop-blur-2xl p-8 rounded-[40px] border border-white/20 shadow-2xl">
+      <div className="w-full max-w-sm relative z-10 bg-white/5 backdrop-blur-2xl p-8 rounded-[40px] border border-white/10 shadow-2xl">
         <div className="flex flex-col items-center mb-10">
           <div className="w-20 h-20 flex items-center justify-center mb-6">
             <img src="/logo-login.png" alt="HUBbooking" className="w-full h-full object-contain drop-shadow-2xl" />
