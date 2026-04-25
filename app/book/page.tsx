@@ -4,9 +4,15 @@ import { redirect } from "next/navigation"
 import { Navbar } from "@/components/navbar"
 import { BookingForm } from "@/components/booking-form"
 
-export default async function BookPage() {
+export default async function BookPage({
+  searchParams,
+}: {
+  searchParams: { date?: string }
+}) {
   const session = await getServerSession(authOptions)
   if (!session) redirect("/login")
+
+  const initialDate = searchParams.date
 
   return (
     <div className="min-h-screen bg-white">
@@ -20,7 +26,7 @@ export default async function BookPage() {
           </p>
         </div>
 
-        <BookingForm />
+        <BookingForm initialDate={initialDate} />
       </main>
     </div>
   )

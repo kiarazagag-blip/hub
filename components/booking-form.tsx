@@ -17,7 +17,11 @@ interface TimeValue {
   minute: number
 }
 
-export function BookingForm() {
+interface BookingFormProps {
+  initialDate?: string
+}
+
+export function BookingForm({ initialDate }: BookingFormProps) {
   const router = useRouter()
   const [startTime, setStartTime] = useState<TimeValue>({ hour: 9, minute: 0 })
   const [endTime, setEndTime] = useState<TimeValue>({ hour: 10, minute: 0 })
@@ -33,7 +37,7 @@ export function BookingForm() {
   } = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
-      date: format(new Date(), "yyyy-MM-dd"),
+      date: initialDate || format(new Date(), "yyyy-MM-dd"),
       startHour: 9,
       startMinute: 0,
       endHour: 10,
