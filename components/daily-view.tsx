@@ -55,17 +55,17 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
         </div>
       )}
 
-      <div className="relative border-r border-zinc-100/50 mr-14" style={{ height: `${(hours.length - 1) * HOUR_HEIGHT}px` }}>
+      <div className="relative border-r border-brand-black/10 mr-14" style={{ height: `${(hours.length - 1) * HOUR_HEIGHT}px` }}>
         {hours.map((hour) => (
           <div
             key={hour}
             className="absolute left-0 right-0 flex items-start"
             style={{ top: `${(hour - 8) * HOUR_HEIGHT}px` }}
           >
-            <span className="absolute -right-14 w-12 text-[11px] font-medium text-zinc-400 text-right leading-none -mt-1.5 pr-1">
+            <span className="absolute -right-14 w-12 text-[11px] font-bold text-brand-black/60 text-right leading-none -mt-1.5 pr-1 font-mono">
               {hour.toString().padStart(2, "0")}:00
             </span>
-            <div className="flex-1 border-t border-zinc-100" />
+            <div className="flex-1 border-t border-brand-black/10" />
           </div>
         ))}
 
@@ -75,10 +75,10 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
             className="absolute left-0 right-0 flex items-start"
             style={{ top: `${(hour - 8) * HOUR_HEIGHT + HOUR_HEIGHT / 2}px` }}
           >
-            <span className="absolute -right-14 w-12 text-[10px] font-medium text-zinc-300 text-right leading-none -mt-1.5 pr-1">
+            <span className="absolute -right-14 w-12 text-[10px] font-bold text-brand-black/30 text-right leading-none -mt-1.5 pr-1 font-mono">
               {hour.toString().padStart(2, "0")}:30
             </span>
-            <div className="flex-1 border-t border-dashed border-zinc-50" />
+            <div className="flex-1 border-t border-dashed border-brand-black/5" />
           </div>
         ))}
 

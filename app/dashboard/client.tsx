@@ -102,13 +102,14 @@ export function DashboardClient({
       <main className="w-full max-w-4xl mx-auto px-4 py-8">
         <div className="flex flex-col">
           {/* Header Section */}
-          <div className="flex items-center justify-between mb-6">
-            <button
-              onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(-1))}
-              className="p-2 rounded-xl hover:bg-white transition-colors text-brand-black/60"
-            >
-              {view === "daily" ? <CalendarIcon className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
-            </button>
+          <div className="sticky top-0 bg-brand-gray z-20 pb-4">
+            <div className="flex items-center justify-between mb-6">
+              <button
+                onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(-1))}
+                className="p-2 rounded-xl hover:bg-white transition-colors text-brand-black/60"
+              >
+                {view === "daily" ? <CalendarIcon className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+              </button>
 
             <motion.div
               layout
@@ -127,12 +128,13 @@ export function DashboardClient({
               </p>
             </motion.div>
 
-            <button
-              onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(1))}
-              className="p-2 rounded-xl hover:bg-white transition-colors text-brand-black/60"
-            >
-              {view === "daily" ? <span className="text-xs font-bold px-2">סגור</span> : <ChevronLeft className="w-5 h-5" />}
-            </button>
+              <button
+                onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(1))}
+                className="p-2 rounded-xl hover:bg-white transition-colors text-brand-black/60"
+              >
+                {view === "daily" ? <span className="text-xs font-bold px-2">סגור</span> : <ChevronLeft className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
 
           {/* Calendar Grid */}
@@ -140,10 +142,10 @@ export function DashboardClient({
             {/* Day Labels */}
             <motion.div
               layout
-              className="grid grid-cols-7 mb-2"
+              className="grid grid-cols-7 mb-4 border-b border-brand-black/5 pb-2"
             >
               {DAY_NAMES.map((d) => (
-                <div key={d} className="text-center text-[10px] font-bold text-brand-black/20 py-2 uppercase tracking-tighter">
+                <div key={d} className="text-center text-[12px] font-bold text-brand-black/40 uppercase tracking-widest">
                   {d}
                 </div>
               ))}
@@ -190,10 +192,9 @@ export function DashboardClient({
                             }
                           }}
                           className={cn(
-                            "relative aspect-square flex flex-col items-center justify-center rounded-xl text-sm transition-all duration-200",
-                            !inMonth && "opacity-20",
-                            isSelected ? "text-white" : "text-brand-black hover:bg-brand-gray",
-                            !isSelected && today && "bg-brand-yellow/20 text-brand-black font-bold",
+                            "relative aspect-[1/1.1] flex flex-col items-center justify-center rounded-2xl text-base transition-all duration-200",
+                            isSelected ? "text-white" : "text-brand-black hover:bg-white",
+                            !isSelected && today && "bg-brand-yellow/30 text-brand-black font-extrabold",
                             !isSelected && !inMonth && "text-brand-black/40"
                           )}
                         >
