@@ -140,7 +140,10 @@ export function DashboardClient({
                   </div>
                 ))}
               </div>
-                   {/* Calendar Grid */}
+            )}
+          </div>
+
+          {/* Calendar Grid */}
           <motion.div 
             className="relative overflow-hidden"
             drag="x"
