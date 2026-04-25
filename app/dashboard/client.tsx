@@ -102,8 +102,8 @@ export function DashboardClient({
       <main className="w-full max-w-4xl mx-auto px-4 py-8">
         <div className="flex flex-col">
           {/* Header Section */}
-          <div className="sticky top-0 bg-brand-gray z-30">
-            <div className="flex items-center justify-between py-6">
+          <div className="sticky top-0 bg-brand-gray z-40 pb-4">
+            <div className="flex items-center justify-between pt-6 mb-2">
               <button
                 onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(-1))}
                 className="p-2 rounded-xl hover:bg-white transition-colors text-brand-black/60"
@@ -111,22 +111,18 @@ export function DashboardClient({
                 {view === "daily" ? <CalendarIcon className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
               </button>
 
-              <motion.div
-                layout
-                className="text-center"
-                transition={TRANSITION}
-              >
-                <h1 className="text-2xl font-bold text-brand-black tracking-tight">
+              <div className="text-center">
+                <h1 className="text-xl font-bold text-brand-black tracking-tight">
                   {view === "daily"
-                    ? format(activeDate, "EEEE", { locale: he })
+                    ? format(activeDate, "EEEE d MMMM", { locale: he })
                     : format(currentMonth, "MMMM yyyy", { locale: he })}
                 </h1>
-                <p className="text-sm font-bold text-brand-black/40">
+                <p className="text-xs font-bold text-brand-black/30">
                   {view === "daily"
-                    ? format(activeDate, "d MMMM yyyy", { locale: he })
+                    ? format(activeDate, "yyyy", { locale: he })
                     : `${bookings.length} הזמנות`}
                 </p>
-              </motion.div>
+              </div>
 
               <button
                 onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(1))}
@@ -136,30 +132,20 @@ export function DashboardClient({
               </button>
             </div>
             
-            {/* Day Labels - Now inside sticky for better context */}
-            <AnimatePresence>
-              {view === "monthly" && (
-                <motion.div
-                  key="day-labels"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="grid grid-cols-7 border-b border-brand-black/5 pb-4 overflow-hidden"
-                >
-                  {DAY_NAMES.map((d) => (
-                    <div key={d} className="text-center text-[12px] font-bold text-brand-black/40 uppercase tracking-widest">
-                      {d}
-                    </div>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {view === "monthly" && (
+              <div className="grid grid-cols-7 border-b border-brand-black/5 pb-2">
+                {DAY_NAMES.map((d) => (
+                  <div key={d} className="text-center text-[10px] font-bold text-brand-black/20 uppercase tracking-widest">
+                    {d}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Calendar Grid - With Hard Clip */}
-          <div className="relative overflow-hidden pt-4">
-            {/* Weeks Container */}
-            <div className="space-y-4">
+          {/* Calendar Grid */}
+          <div className="relative overflow-hidden">
+            <div className={cn("transition-all duration-300", view === "monthly" ? "pt-4" : "pt-0")}>
               {weeks.map((week, wi) => {
                 const isAnchor = wi === anchorWeekIndex
                 const isAbove = wi < anchorWeekIndex
@@ -171,14 +157,14 @@ export function DashboardClient({
                     layout
                     initial={false}
                     animate={{
-                      y: isDaily ? (isAbove ? -800 : (isAnchor ? 0 : 1200)) : 0,
+                      y: isDaily ? (isAbove ? -600 : (isAnchor ? 0 : 1000)) : 0,
                       opacity: isDaily ? (isAnchor ? 1 : 0) : 1,
                       height: isDaily ? (isAnchor ? "auto" : 0) : "auto",
-                      marginBottom: isDaily ? (isAnchor ? 32 : 0) : 12,
+                      marginBottom: isDaily ? (isAnchor ? 20 : 0) : 8,
                     }}
                     transition={TRANSITION}
                     className={cn(
-                      "grid grid-cols-7 gap-x-2",
+                      "grid grid-cols-7 gap-2",
                       isDaily && !isAnchor && "pointer-events-none"
                     )}
                   >
@@ -199,8 +185,8 @@ export function DashboardClient({
                             }
                           }}
                           className={cn(
-                            "relative aspect-[1/1.6] flex flex-col items-center justify-start group transition-all duration-200",
-                            !inMonth && "text-brand-black/30"
+                            "relative aspect-[1/1.5] flex flex-col items-center justify-start group transition-all duration-200",
+                            !inMonth && "text-brand-black/20"
                           )}
                         >
                           <div className="relative w-11 h-11 flex flex-col items-center justify-center shrink-0">
@@ -244,11 +230,11 @@ export function DashboardClient({
               {view === "daily" && (
                 <motion.div
                   key="daily-view"
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 40 }}
-                  transition={{ ...TRANSITION, delay: 0.1 }}
-                  className="mt-4 pt-4 border-t border-brand-black/5"
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ ...TRANSITION, delay: 0.05 }}
+                  className="mt-2"
                 >
                   <DailyView bookings={bookings} selectedDate={activeDate} />
                 </motion.div>
