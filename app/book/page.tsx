@@ -7,12 +7,13 @@ import { BookingForm } from "@/components/booking-form"
 export default async function BookPage({
   searchParams,
 }: {
-  searchParams: { date?: string }
+  searchParams: Promise<{ date?: string }>
 }) {
   const session = await getServerSession(authOptions)
   if (!session) redirect("/login")
 
-  const initialDate = searchParams.date
+  const { date } = await searchParams
+  const initialDate = date
 
   return (
     <div className="min-h-screen bg-white">
