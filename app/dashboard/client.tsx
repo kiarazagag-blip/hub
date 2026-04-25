@@ -157,9 +157,9 @@ export function DashboardClient({
           </div>
 
           {/* Calendar Grid - With Hard Clip */}
-          <div className="relative overflow-hidden flex-1 min-h-[60vh]">
+          <div className="relative overflow-hidden flex-1 min-h-[75vh]">
             {/* Weeks Container */}
-            <div className="space-y-4 pt-4 pb-20">
+            <div className="h-full flex flex-col pt-2 pb-6">
               {weeks.map((week, wi) => {
                 const isAnchor = wi === anchorWeekIndex
                 const isAbove = wi < anchorWeekIndex
@@ -171,14 +171,14 @@ export function DashboardClient({
                     layout
                     initial={false}
                     animate={{
-                      y: isDaily ? (isAbove ? -600 : (isAnchor ? 0 : 1000)) : 0,
+                      y: isDaily ? (isAbove ? -800 : (isAnchor ? 0 : 1200)) : 0,
                       opacity: isDaily ? (isAnchor ? 1 : 0) : 1,
-                      height: isDaily ? (isAnchor ? "auto" : 0) : "auto",
+                      height: isDaily ? (isAnchor ? "auto" : 0) : "100%",
                       marginBottom: isDaily ? (isAnchor ? 40 : 0) : 0,
                     }}
                     transition={TRANSITION}
                     className={cn(
-                      "grid grid-cols-7 gap-x-2",
+                      "grid grid-cols-7 gap-x-2 flex-1",
                       isDaily && !isAnchor && "pointer-events-none"
                     )}
                   >
@@ -199,20 +199,20 @@ export function DashboardClient({
                             }
                           }}
                           className={cn(
-                            "relative aspect-[1/1.5] flex flex-col items-center justify-start group transition-all duration-200",
-                            !inMonth && "text-brand-black/20"
+                            "relative h-full flex flex-col items-center justify-start py-2 group transition-all duration-200",
+                            !inMonth && "text-brand-black/30"
                           )}
                         >
-                          <div className="relative w-full aspect-square flex flex-col items-center justify-center">
+                          <div className="relative w-11 h-11 flex flex-col items-center justify-center shrink-0">
                             {isSelected && (
                               <motion.div
                                 layoutId="active-date-bg"
-                                className="absolute inset-0 bg-brand-blue rounded-2xl z-0 shadow-lg shadow-brand-blue/20"
+                                className="absolute inset-0 bg-brand-blue rounded-2xl z-0"
                                 transition={TRANSITION}
                               />
                             )}
                             {!isSelected && today && (
-                              <div className="absolute inset-0 bg-brand-yellow/30 rounded-2xl z-0" />
+                              <div className="absolute inset-0 bg-brand-yellow/20 rounded-2xl z-0" />
                             )}
                             <span className={cn(
                               "relative z-10 text-lg transition-all",
@@ -227,7 +227,7 @@ export function DashboardClient({
                             <span
                               className={cn(
                                 "w-1.5 h-1.5 rounded-full mt-2 transition-colors",
-                                isSelected ? "bg-white/80" : "bg-brand-black/20"
+                                isSelected ? "bg-white" : "bg-brand-black/20"
                               )}
                             />
                           )}
