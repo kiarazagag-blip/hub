@@ -137,16 +137,23 @@ export function DashboardClient({
             </div>
             
             {/* Day Labels - Now inside sticky for better context */}
-            <motion.div
-              layout
-              className="grid grid-cols-7 border-b border-brand-black/5 pb-4"
-            >
-              {DAY_NAMES.map((d) => (
-                <div key={d} className="text-center text-[12px] font-bold text-brand-black/40 uppercase tracking-widest">
-                  {d}
-                </div>
-              ))}
-            </motion.div>
+            <AnimatePresence>
+              {view === "monthly" && (
+                <motion.div
+                  key="day-labels"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="grid grid-cols-7 border-b border-brand-black/5 pb-4 overflow-hidden"
+                >
+                  {DAY_NAMES.map((d) => (
+                    <div key={d} className="text-center text-[12px] font-bold text-brand-black/40 uppercase tracking-widest">
+                      {d}
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Calendar Grid - With Hard Clip */}
@@ -230,7 +237,6 @@ export function DashboardClient({
                   </motion.div>
                 )
               })}
-            </div>
             </div>
 
             {/* Daily View Accordion */}
