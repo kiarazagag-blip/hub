@@ -78,7 +78,10 @@ export function DashboardClient({
     )
   }, [weeks, activeDate])
 
+  const [isSwiping, setIsSwiping] = useState(false)
+
   const handleDateSelect = (date: Date) => {
+    if (isSwiping) return
     setActiveDate(date)
     setView("daily")
     window.history.replaceState(null, "", `/dashboard?date=${format(date, "yyyy-MM-dd")}`)
@@ -148,12 +151,18 @@ export function DashboardClient({
             className="relative overflow-hidden"
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.2}
+            dragElastic={0.8}
+            onDragStart={() => setIsSwiping(false)}
+            onDrag={(_, info) => {
+              if (Math.abs(info.offset.x) > 10) setIsSwiping(true)
+            }}
             onDragEnd={(_, info) => {
-              if (view === "monthly") {
-                if (info.offset.x > 100) handleMonthChange(-1)
-                else if (info.offset.x < -100) handleMonthChange(1)
+              if (view === "monthly" && isSwiping) {
+                if (info.offset.x > 80) handleMonthChange(-1)
+                else if (info.offset.x < -80) handleMonthChange(1)
               }
+              // Small delay to ensure click doesn't fire immediately after drag
+              setTimeout(() => setIsSwiping(false), 50)
             }}
           >
             <div className={cn("transition-all duration-300", view === "monthly" ? "pt-4" : "pt-0")}>
@@ -190,6 +199,7 @@ export function DashboardClient({
                           key={di}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => {
+                            if (isSwiping) return
                             if (isSelected && view === "daily") {
                               setView("monthly")
                             } else {
