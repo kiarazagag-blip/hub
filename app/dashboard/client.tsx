@@ -33,14 +33,14 @@ const CURTAIN = {
 // Smooth horizontal carousel spring
 const SLIDE = {
   type: "spring",
-  stiffness: 220,
-  damping: 26,
+  stiffness: 180,
+  damping: 24,
   mass: 1,
 }
 
-// Directional slide variants for month carousel
+// RTL: next month enters from LEFT, exits to RIGHT
 const slideVariants = {
-  enter: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%" }),
+  enter: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%" }),
   center: { x: 0 },
   exit: (dir: number) => ({ x: dir < 0 ? "100%" : "-100%" }),
 }
@@ -149,7 +149,7 @@ export function DashboardClient({
           </div>
 
           {/* ── Calendar: carousel for months, curtain for daily ── */}
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-x-hidden">
             <AnimatePresence initial={false} custom={slideDir} mode="popLayout">
               <motion.div
                 key={monthPage}
@@ -165,8 +165,9 @@ export function DashboardClient({
                 dragElastic={0.25}
                 onDragEnd={(_, { offset, velocity }) => {
                   const power = offset.x + velocity.x * 0.3
-                  if (power > 60) handleMonthChange(-1)
-                  else if (power < -60) handleMonthChange(1)
+                  // RTL: swipe right = next month, swipe left = previous month
+                  if (power > 60) handleMonthChange(1)
+                  else if (power < -60) handleMonthChange(-1)
                 }}
                 style={{ touchAction: view === "monthly" ? "pan-x" : "auto" }}
                 className="w-full pt-4"
