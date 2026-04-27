@@ -43,8 +43,6 @@ export default async function DashboardPage({
       userName={session.user?.name}
       bookings={serialized}
       selectedDate={selectedDate}
-      prevDate={prevDate}
-      nextDate={nextDate}
       initialView={initialView}
     />
   )
