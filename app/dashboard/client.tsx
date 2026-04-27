@@ -33,9 +33,9 @@ const CURTAIN = {
 // Smooth horizontal carousel spring
 const SLIDE = {
   type: "spring",
-  stiffness: 300,
-  damping: 30,
-  mass: 0.8,
+  stiffness: 220,
+  damping: 26,
+  mass: 1,
 }
 
 // Directional slide variants for month carousel
@@ -168,6 +168,7 @@ export function DashboardClient({
                   if (power > 60) handleMonthChange(-1)
                   else if (power < -60) handleMonthChange(1)
                 }}
+                style={{ touchAction: view === "monthly" ? "pan-x" : "auto" }}
                 className="w-full pt-4"
               >
                 {/* Week rows with fast curtain animation */}
