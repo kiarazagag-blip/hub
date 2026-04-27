@@ -190,8 +190,8 @@ export function DashboardClient({
           {/* Calendar carousel — touch handled natively, no drag physics */}
           <div
             className="relative overflow-x-hidden"
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
+            onTouchStart={view === "monthly" ? onTouchStart : undefined}
+            onTouchEnd={view === "monthly" ? onTouchEnd : undefined}
           >
             <AnimatePresence initial={false} custom={slideDir} mode="popLayout">
               <motion.div
