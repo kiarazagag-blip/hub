@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useRef, useEffect } from "react"
 import {
   format,
   addDays,
@@ -22,7 +22,7 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
-// Fast curtain spring — same as the "pure perfection" version
+// Curtain: fast spring for date opening animation
 const CURTAIN = {
   type: "spring",
   stiffness: 400,
@@ -30,12 +30,12 @@ const CURTAIN = {
   mass: 1,
 }
 
-// Smooth horizontal carousel spring
+// Carousel: crisp Instagram-like snap
 const SLIDE = {
   type: "spring",
-  stiffness: 180,
-  damping: 24,
-  mass: 1,
+  stiffness: 600,
+  damping: 45,
+  mass: 0.6,
 }
 
 // RTL: next month enters from LEFT, exits to RIGHT
@@ -60,6 +60,21 @@ export function DashboardClient({
   const [activeDate, setActiveDate] = useState<Date>(new Date(selectedDate))
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(selectedDate))
   const [[monthPage, slideDir], setMonthPage] = useState([0, 0])
+
+  // Touch tracking for Instagram-like swipe (no drag physics)
+  const touchStartX = useRef(0)
+  const touchStartY = useRef(0)
+  const touchStartTime = useRef(0)
+
+  // Lock body scroll in monthly view
+  useEffect(() => {
+    if (view === "monthly") {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+    return () => { document.body.style.overflow = "" }
+  }, [view])
 
   const weeks = useMemo(() => {
     const monthStart = startOfMonth(currentMonth)
@@ -97,6 +112,30 @@ export function DashboardClient({
     setActiveDate(nextActive)
   }
 
+  // Native touch handlers — crisp, no drag interference with scroll
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+    touchStartTime.current = Date.now()
+  }
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (view !== "monthly") return
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    const dy = e.changedTouches[0].clientY - touchStartY.current
+    const dt = Date.now() - touchStartTime.current
+    const velocity = Math.abs(dx) / dt // px/ms
+
+    // Only fire if horizontal movement clearly dominates vertical
+    if (Math.abs(dx) < Math.abs(dy) * 1.2) return
+    // Require a meaningful swipe or a fast flick
+    if (Math.abs(dx) < 40 && velocity < 0.4) return
+
+    // RTL: right = next month (numerically higher), left = previous month
+    if (dx > 0) handleMonthChange(1)
+    else handleMonthChange(-1)
+  }
+
   const DAY_NAMES = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"]
 
   return (
@@ -106,7 +145,7 @@ export function DashboardClient({
       <main className="w-full max-w-4xl mx-auto px-4 py-8">
         <div className="flex flex-col">
 
-          {/* ── Header (sticky, clips anything that slides behind it) ── */}
+          {/* Header — sticky, clips anything sliding behind it */}
           <div className="sticky top-0 bg-brand-gray z-40 pb-2">
             <div className="flex items-center justify-between pt-6 mb-2">
               <button
@@ -148,8 +187,12 @@ export function DashboardClient({
             )}
           </div>
 
-          {/* ── Calendar: carousel for months, curtain for daily ── */}
-          <div className="relative overflow-x-hidden">
+          {/* Calendar carousel — touch handled natively, no drag physics */}
+          <div
+            className="relative overflow-x-hidden"
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+          >
             <AnimatePresence initial={false} custom={slideDir} mode="popLayout">
               <motion.div
                 key={monthPage}
@@ -159,20 +202,9 @@ export function DashboardClient({
                 animate="center"
                 exit="exit"
                 transition={SLIDE}
-                /* Swipe to change month — only in monthly view */
-                drag={view === "monthly" ? "x" : false}
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.25}
-                onDragEnd={(_, { offset, velocity }) => {
-                  const power = offset.x + velocity.x * 0.3
-                  // RTL: swipe right = next month, swipe left = previous month
-                  if (power > 60) handleMonthChange(1)
-                  else if (power < -60) handleMonthChange(-1)
-                }}
-                style={{ touchAction: view === "monthly" ? "pan-x" : "auto" }}
                 className="w-full pt-4"
               >
-                {/* Week rows with fast curtain animation */}
+                {/* Week rows with curtain animation */}
                 {weeks.map((week, wi) => {
                   const isAnchor = wi === anchorWeekIndex
                   const isAbove = wi < anchorWeekIndex
