@@ -4,7 +4,6 @@ import { useState, useMemo } from "react"
 import {
   format,
   addDays,
-  subDays,
   startOfMonth,
   endOfMonth,
   startOfWeek,
@@ -29,27 +28,23 @@ const TRANSITION = {
   damping: 40,
   mass: 1,
   duration: 0.3,
-  ease: [0.4, 0, 0.2, 1],
 }
 
 export function DashboardClient({ 
   userName, 
   bookings, 
   selectedDate, 
-  prevDate,
-  nextDate,
   initialView = "monthly" 
 }: { 
   userName?: string | null; 
   bookings: any; 
   selectedDate: Date; 
-  prevDate: Date;
-  nextDate: Date;
   initialView?: "daily" | "monthly" 
 }) {
   const [view, setView] = useState<"daily" | "monthly">(initialView)
   const [activeDate, setActiveDate] = useState<Date>(new Date(selectedDate))
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(selectedDate))
+  const [isSwiping, setIsSwiping] = useState(false)
 
   // Generate weeks for the current month
   const weeks = useMemo(() => {
@@ -78,9 +73,6 @@ export function DashboardClient({
     )
   }, [weeks, activeDate])
 
-  const [isSwiping, setIsSwiping] = useState(false)
-  const [[monthPage, direction], setMonthPage] = useState([0, 0])
-
   const handleDateSelect = (date: Date) => {
     if (isSwiping) return
     setActiveDate(date)
@@ -88,34 +80,16 @@ export function DashboardClient({
     window.history.replaceState(null, "", `/dashboard?date=${format(date, "yyyy-MM-dd")}`)
   }
 
-  const handleMonthChange = (newDirection: number) => {
-    setMonthPage([monthPage + newDirection, newDirection])
-    const next = newDirection > 0 ? addMonths(currentMonth, 1) : subMonths(currentMonth, 1)
+  const handleMonthChange = (offset: number) => {
+    const next = offset > 0 ? addMonths(currentMonth, 1) : subMonths(currentMonth, 1)
     setCurrentMonth(next)
     
     // Also sync the active date to the same day in the new month
-    const nextActive = newDirection > 0 ? addMonths(activeDate, 1) : subMonths(activeDate, 1)
+    const nextActive = offset > 0 ? addMonths(activeDate, 1) : subMonths(activeDate, 1)
     setActiveDate(nextActive)
   }
 
   const DAY_NAMES = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"]
-
-  const variants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 500 : -500,
-      opacity: 0
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1
-    },
-    exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? 500 : -500,
-      opacity: 0
-    })
-  }
 
   return (
     <div className="min-h-screen bg-brand-gray overflow-x-hidden">
@@ -165,84 +139,64 @@ export function DashboardClient({
             )}
           </div>
 
-          {/* Calendar Carousel Container */}
-          <div className="relative">
-            <AnimatePresence initial={false} custom={direction} mode="popLayout">
-              <motion.div
-                key={monthPage}
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  x: { type: "spring", stiffness: 300, damping: 30 },
-                  opacity: { duration: 0.2 }
-                }}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={1}
-                onDragStart={() => setIsSwiping(false)}
-                onDrag={(_, info) => {
-                  if (Math.abs(info.offset.x) > 10) setIsSwiping(true)
-                }}
-                onDragEnd={(e, { offset, velocity }) => {
-                  const swipe = Math.abs(offset.x) * velocity.x
-                  if (swipe < -10000) {
-                    handleMonthChange(1)
-                  } else if (swipe > 10000) {
-                    handleMonthChange(-1)
-                  }
-                  setTimeout(() => setIsSwiping(false), 50)
-                }}
-                className="w-full"
-              >
-                <div className={cn("transition-all duration-300", view === "monthly" ? "pt-4" : "pt-0")}>
-                  {weeks.map((week, wi) => {
-                    const isAnchor = wi === anchorWeekIndex
-                    const isAbove = wi < anchorWeekIndex
-                    const isDaily = view === "daily"
+          {/* Calendar Grid */}
+          <motion.div 
+            className="relative"
+            onPanStart={() => setIsSwiping(true)}
+            onPanEnd={(_, info) => {
+              if (view === "monthly") {
+                if (info.offset.x > 40) handleMonthChange(-1)
+                else if (info.offset.x < -40) handleMonthChange(1)
+              }
+              setTimeout(() => setIsSwiping(false), 50)
+            }}
+          >
+            <div className={cn("transition-all duration-300", view === "monthly" ? "pt-4" : "pt-0")}>
+              {weeks.map((week, wi) => {
+                const isAnchor = wi === anchorWeekIndex
+                const isAbove = wi < anchorWeekIndex
+                const isDaily = view === "daily"
 
-                    return (
-                      <motion.div
-                        key={wi}
-                        layout
-                        initial={false}
-                        animate={{
-                          y: isDaily ? (isAbove ? -600 : (isAnchor ? 0 : 1000)) : 0,
-                          opacity: isDaily ? (isAnchor ? 1 : 0) : 1,
-                          height: isDaily ? (isAnchor ? "auto" : 0) : "auto",
-                          marginBottom: isDaily ? (isAnchor ? 20 : 0) : 8,
-                        }}
-                        transition={TRANSITION}
-                        className={cn(
-                          "grid grid-cols-7 gap-2",
-                          isDaily && !isAnchor && "pointer-events-none"
-                        )}
-                      >
-                        {week.map((date, di) => {
-                          const inMonth = isSameMonth(date, currentMonth)
-                          const isSelected = isSameDay(date, activeDate)
-                          const hasBooking = bookings.some((b: any) => isSameDay(new Date(b.startTime), date))
-                          const today = isToday(date)
+                return (
+                  <motion.div
+                    key={`${wi}-${currentMonth.toISOString()}`}
+                    layout
+                    initial={false}
+                    animate={{
+                      y: isDaily ? (isAbove ? -600 : (isAnchor ? 0 : 1000)) : 0,
+                      opacity: isDaily ? (isAnchor ? 1 : 0) : 1,
+                      height: isDaily ? (isAnchor ? "auto" : 0) : "auto",
+                      marginBottom: isDaily ? (isAnchor ? 20 : 0) : 8,
+                    }}
+                    transition={TRANSITION}
+                    className={cn(
+                      "grid grid-cols-7 gap-2",
+                      isDaily && !isAnchor && "pointer-events-none"
+                    )}
+                  >
+                    {week.map((date, di) => {
+                      const inMonth = isSameMonth(date, currentMonth)
+                      const isSelected = isSameDay(date, activeDate)
+                      const hasBooking = bookings.some((b: any) => isSameDay(new Date(b.startTime), date))
+                      const today = isToday(date)
 
-                          return (
-                            <motion.button
-                              key={di}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => {
-                                if (isSwiping) return
-                                if (isSelected && view === "daily") {
-                                  setView("monthly")
-                                } else {
-                                  handleDateSelect(date)
-                                }
-                              }}
-                              className={cn(
-                                "relative aspect-[1/1.5] flex flex-col items-center justify-start group transition-all duration-200",
-                                !inMonth && "text-brand-black/20"
-                              )}
-                            >
+                      return (
+                        <motion.button
+                          key={di}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => {
+                            if (isSwiping) return
+                            if (isSelected && view === "daily") {
+                              setView("monthly")
+                            } else {
+                              handleDateSelect(date)
+                            }
+                          }}
+                          className={cn(
+                            "relative aspect-[1/1.5] flex flex-col items-center justify-start group transition-all duration-200",
+                            !inMonth && "text-brand-black/20"
+                          )}
+                        >
                           <div className="relative w-11 h-11 flex flex-col items-center justify-center shrink-0">
                             {isSelected && (
                               <motion.div
