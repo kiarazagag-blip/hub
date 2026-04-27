@@ -142,13 +142,16 @@ export function DashboardClient({
           {/* Calendar Grid */}
           <motion.div 
             className="relative"
-            onPanStart={() => setIsSwiping(true)}
             onPanEnd={(_, info) => {
               if (view === "monthly") {
-                if (info.offset.x > 40) handleMonthChange(-1)
-                else if (info.offset.x < -40) handleMonthChange(1)
+                const dist = info.offset.x
+                if (dist > 60) handleMonthChange(-1)
+                else if (dist < -60) handleMonthChange(1)
               }
-              setTimeout(() => setIsSwiping(false), 50)
+              setTimeout(() => setIsSwiping(false), 30)
+            }}
+            onPan={(_, info) => {
+              if (Math.abs(info.offset.x) > 15) setIsSwiping(true)
             }}
           >
             <div className={cn("transition-all duration-300", view === "monthly" ? "pt-4" : "pt-0")}>
@@ -159,7 +162,7 @@ export function DashboardClient({
 
                 return (
                   <motion.div
-                    key={`${wi}-${currentMonth.toISOString()}`}
+                    key={wi}
                     layout
                     initial={false}
                     animate={{
@@ -200,9 +203,10 @@ export function DashboardClient({
                           <div className="relative w-11 h-11 flex flex-col items-center justify-center shrink-0">
                             {isSelected && (
                               <motion.div
-                                layoutId="active-date-bg"
                                 className="absolute inset-0 bg-brand-blue rounded-2xl z-0"
-                                transition={TRANSITION}
+                                initial={{ scale: 0.7, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ type: "spring", stiffness: 500, damping: 35 }}
                               />
                             )}
                             {!isSelected && today && (
