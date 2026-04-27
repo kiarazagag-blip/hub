@@ -186,8 +186,9 @@ export function DashboardClient({
                       const today = isToday(date)
 
                       return (
-                        <button
+                        <motion.button
                           key={di}
+                          whileTap={{ scale: 0.95 }}
                           onClick={() => {
                             if (isSelected && view === "daily") {
                               setView("monthly")
@@ -228,7 +229,7 @@ export function DashboardClient({
                               )}
                             />
                           )}
-                        </button>
+                        </motion.button>
                       )
                     })}
                   </motion.div>
