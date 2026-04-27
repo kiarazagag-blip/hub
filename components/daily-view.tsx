@@ -33,9 +33,9 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
     const start = new Date(booking.startTime)
     const end = new Date(booking.endTime)
     
-    // Use decimal hours for precise positioning
-    const startDecimal = start.getHours() + start.getMinutes() / 60
-    const endDecimal = end.getHours() + end.getMinutes() / 60
+    // Use UTC hours — times are stored as UTC matching what the user entered
+    const startDecimal = start.getUTCHours() + start.getUTCMinutes() / 60
+    const endDecimal = end.getUTCHours() + end.getUTCMinutes() / 60
     
     const topMinutes = (startDecimal - 8) * 60
     const durationMinutes = (endDecimal - startDecimal) * 60
@@ -104,7 +104,7 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
                     dir="ltr"
                   >
                     <span className="opacity-40">●</span>
-                    {format(start, "HH:mm")} – {format(end, "HH:mm")}
+                    {`${String(start.getUTCHours()).padStart(2,"0")}:${String(start.getUTCMinutes()).padStart(2,"0")}`} – {`${String(end.getUTCHours()).padStart(2,"0")}:${String(end.getUTCMinutes()).padStart(2,"0")}`}
                   </p>
                 </div>
               </div>
