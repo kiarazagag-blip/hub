@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { format } from "date-fns"
 import { AlarmTimePicker } from "@/components/alarm-time-picker"
 import { Button } from "@/components/ui/button"
@@ -212,16 +213,12 @@ export function BookingForm({ initialDate }: BookingFormProps) {
       )}
 
       <div className="flex gap-3">
-        <Button
-          type="button"
-          variant="ghost"
-          size="lg"
-          className="flex-1 rounded-2xl text-brand-black/60"
-          disabled={status === "loading"}
-          onClick={() => router.push("/dashboard?view=monthly")}
+        <Link
+          href="/dashboard"
+          className="flex-1 flex items-center justify-center h-12 rounded-2xl text-brand-black/50 font-semibold text-sm hover:bg-brand-gray transition-colors"
         >
           ביטול
-        </Button>
+        </Link>
         <Button
           type="submit"
           size="lg"
