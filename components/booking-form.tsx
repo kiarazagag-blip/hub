@@ -216,7 +216,7 @@ export function BookingForm({ initialDate }: BookingFormProps) {
           type="button"
           variant="ghost"
           size="lg"
-          className="flex-1 rounded-2xl text-brand-black/60 hover:text-brand-black hover:bg-brand-gray"
+          className="flex-1 rounded-2xl text-brand-black/60 active:text-brand-black active:bg-brand-gray"
           disabled={status === "loading"}
           onClick={() => router.push("/dashboard?view=monthly")}
         >
@@ -225,7 +225,7 @@ export function BookingForm({ initialDate }: BookingFormProps) {
         <Button
           type="submit"
           size="lg"
-          className="flex-[2] bg-brand-blue hover:bg-brand-blue/90 text-white rounded-2xl shadow-lg shadow-brand-blue/20"
+          className="flex-[2] bg-brand-blue active:bg-brand-blue/90 text-white rounded-2xl shadow-lg shadow-brand-blue/20 active:scale-95 transition-all"
           disabled={status === "loading"}
         >
           {status === "loading" ? (
