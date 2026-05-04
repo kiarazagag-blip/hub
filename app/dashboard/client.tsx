@@ -42,7 +42,7 @@ const SLIDE = {
 const slideVariants = {
   enter: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%", opacity: 0 }),
   center: { x: 0, opacity: 1 },
-  exit: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%", opacity: 0 }),
+  exit: { opacity: 0, scale: 0.98, transition: { duration: 0.2 } },
 }
 
 export function DashboardClient({
@@ -161,7 +161,7 @@ export function DashboardClient({
           </div>
 
           {/* Calendar carousel */}
-          <div className="relative z-0">
+          <div className="relative z-0 overflow-hidden px-1 -mx-1">
             <AnimatePresence initial={false} custom={slideDir} mode="popLayout">
               <motion.div
                 key={monthPage}
@@ -175,9 +175,7 @@ export function DashboardClient({
                 onAnimationComplete={() => setIsAnimating(false)}
                 drag={view === "monthly" ? "x" : false}
                 dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.7}
-                dragMomentum={false}
-                dragDirectionLock={true}
+                dragElastic={0.8}
                 onDragEnd={(_, { offset, velocity }) => {
                   if (isAnimating) return
                   const power = offset.x + velocity.x * 0.3
