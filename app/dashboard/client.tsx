@@ -108,8 +108,6 @@ export function DashboardClient({
     setMonthPage(([page]) => [page + offset, offset])
     const next = offset > 0 ? addMonths(currentMonth, 1) : subMonths(currentMonth, 1)
     setCurrentMonth(next)
-    const nextActive = offset > 0 ? addMonths(activeDate, 1) : subMonths(activeDate, 1)
-    setActiveDate(nextActive)
   }
 
   // Native touch handlers — crisp, no drag interference with scroll
@@ -230,7 +228,7 @@ export function DashboardClient({
                     >
                       {week.map((date, di) => {
                         const inMonth = isSameMonth(date, currentMonth)
-                        const isSelected = isSameDay(date, activeDate) && isSameMonth(activeDate, currentMonth)
+                        const isSelected = isSameDay(date, activeDate)
                         const hasBooking = bookings.some((b: any) => isSameDay(new Date(b.startTime), date))
                         const today = isToday(date)
 
