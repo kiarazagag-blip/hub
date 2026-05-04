@@ -288,7 +288,7 @@ export function DashboardClient({
       {/* Floating Action Button */}
       <Link
         href={`/book?date=${format(activeDate, "yyyy-MM-dd")}`}
-        className="fixed bottom-6 left-6 w-14 h-14 bg-brand-blue text-white rounded-full flex items-center justify-center shadow-2xl transition-all active:scale-90 active:bg-brand-blue/90 z-50"
+        className="fixed bottom-6 left-6 w-14 h-14 bg-brand-blue text-white rounded-full flex items-center justify-center shadow-2xl z-50"
       >
         <Plus className="w-8 h-8" />
       </Link>
