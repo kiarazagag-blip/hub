@@ -24,7 +24,7 @@ interface DailyViewProps {
 const HOUR_HEIGHT = 80
 
 export function DailyView({ bookings, selectedDate, onBookingClick }: DailyViewProps) {
-  const hours = Array.from({ length: 16 }, (_, i) => i + 8)
+  const hours = Array.from({ length: 13 }, (_, i) => i + 8)
 
   const dayBookings = useMemo(
     () => bookings.filter((b) => isSameDay(new Date(b.startTime), selectedDate)),

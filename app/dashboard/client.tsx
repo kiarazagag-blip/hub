@@ -25,9 +25,9 @@ import { cn } from "@/lib/utils"
 // Curtain: fast spring for date opening animation
 const CURTAIN = {
   type: "spring",
-  stiffness: 400,
-  damping: 40,
-  mass: 1,
+  stiffness: 700,
+  damping: 50,
+  mass: 0.5,
 }
 
 // Carousel: crisp Instagram-like snap
@@ -181,7 +181,7 @@ export function DashboardClient({
           </div>
 
           {/* Calendar carousel */}
-          <div className="relative z-0 overflow-hidden grid" style={{ gridTemplateAreas: "'carousel'" }}>
+          <div className={cn("relative z-0 grid", view === "monthly" ? "overflow-hidden" : "overflow-visible")} style={{ gridTemplateAreas: "'carousel'" }}>
             <AnimatePresence initial={false} custom={slideDir}>
               <motion.div
                 key={monthPage}
