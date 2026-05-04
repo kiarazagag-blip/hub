@@ -110,7 +110,7 @@ export function DashboardClient({
   const DAY_NAMES = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"]
 
   return (
-    <div className="min-h-screen bg-brand-gray overflow-x-hidden">
+    <div className={cn("bg-brand-gray overflow-x-hidden w-full", view === "monthly" ? "fixed inset-0 touch-none" : "min-h-screen")}>
       <Navbar userName={userName} currentView={view} onViewChange={setView} selectedDate={activeDate} />
 
       <main className="w-full max-w-4xl mx-auto px-4 py-8">
@@ -171,7 +171,9 @@ export function DashboardClient({
                 transition={SLIDE}
                 drag={view === "monthly" ? "x" : false}
                 dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={1}
+                dragElastic={0.7}
+                dragMomentum={false}
+                dragDirectionLock={true}
                 onDragEnd={(_, { offset, velocity }) => {
                   const power = offset.x + velocity.x * 0.3
                   // RTL: right = next month, left = previous month
