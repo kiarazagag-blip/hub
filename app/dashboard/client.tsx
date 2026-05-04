@@ -40,9 +40,9 @@ const SLIDE = {
 
 // RTL: next month enters from LEFT
 const slideVariants = {
-  enter: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%", opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit: { opacity: 0, scale: 0.98, transition: { duration: 0.2 } },
+  enter: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%" }),
+  center: { x: 0 },
+  exit: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%" }),
 }
 
 export function DashboardClient({
@@ -60,7 +60,6 @@ export function DashboardClient({
   const [activeDate, setActiveDate] = useState<Date>(new Date(selectedDate))
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(selectedDate))
   const [[monthPage, slideDir], setMonthPage] = useState([0, 0])
-  const [isAnimating, setIsAnimating] = useState(false)
 
 
 
@@ -103,7 +102,6 @@ export function DashboardClient({
   }
 
   const handleMonthChange = (offset: number) => {
-    if (isAnimating) return
     setMonthPage(([page]) => [page + offset, offset])
     const next = offset > 0 ? addMonths(currentMonth, 1) : subMonths(currentMonth, 1)
     setCurrentMonth(next)
@@ -161,8 +159,8 @@ export function DashboardClient({
           </div>
 
           {/* Calendar carousel */}
-          <div className="relative z-0 overflow-hidden px-1 -mx-1">
-            <AnimatePresence initial={false} custom={slideDir} mode="popLayout">
+          <div className="relative z-0 overflow-hidden px-1 -mx-1 grid" style={{ gridTemplateAreas: "'carousel'" }}>
+            <AnimatePresence initial={false} custom={slideDir}>
               <motion.div
                 key={monthPage}
                 custom={slideDir}
@@ -171,19 +169,16 @@ export function DashboardClient({
                 animate="center"
                 exit="exit"
                 transition={SLIDE}
-                onAnimationStart={() => setIsAnimating(true)}
-                onAnimationComplete={() => setIsAnimating(false)}
                 drag={view === "monthly" ? "x" : false}
                 dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.8}
+                dragElastic={1}
                 onDragEnd={(_, { offset, velocity }) => {
-                  if (isAnimating) return
                   const power = offset.x + velocity.x * 0.3
                   // RTL: right = next month, left = previous month
                   if (power > 50) handleMonthChange(1)
                   else if (power < -50) handleMonthChange(-1)
                 }}
-                style={{ touchAction: view === "monthly" ? "pan-x" : "pan-y" }}
+                style={{ gridArea: "carousel", touchAction: view === "monthly" ? "pan-x" : "pan-y" }}
                 className="w-full pt-4"
               >
                 {/* Week rows with curtain animation */}
