@@ -52,7 +52,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="he" dir="rtl">
-      <body className={polin.className}>
+      <body className={`${polin.className} overscroll-none`}>
         <Providers>
           {children}
           <InstallPrompt />
