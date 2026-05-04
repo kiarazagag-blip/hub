@@ -215,7 +215,7 @@ export function BookingForm({ initialDate }: BookingFormProps) {
       <div className="flex gap-3">
         <Link
           href="/dashboard"
-          className="flex-1 flex items-center justify-center h-12 rounded-2xl text-brand-black/50 font-semibold text-sm hover:bg-brand-gray transition-colors"
+          className="flex-1 flex items-center justify-center h-12 rounded-2xl text-brand-black/50 font-semibold text-sm hover:bg-brand-gray transition-colors touch-manipulation"
         >
           ביטול
         </Link>

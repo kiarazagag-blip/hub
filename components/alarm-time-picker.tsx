@@ -132,7 +132,7 @@ export function AlarmTimePicker({
           />
           <div
             ref={hourRef}
-            className="h-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide relative z-20"
+            className="h-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide relative z-20 touch-pan-y"
             onScroll={handleHourScroll}
           >
             <div style={{ paddingTop: ITEM_HEIGHT, paddingBottom: ITEM_HEIGHT }}>
@@ -185,7 +185,7 @@ export function AlarmTimePicker({
           />
           <div
             ref={minuteRef}
-            className="h-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide relative z-20"
+            className="h-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide relative z-20 touch-pan-y"
             onScroll={handleMinuteScroll}
           >
             <div style={{ paddingTop: ITEM_HEIGHT, paddingBottom: ITEM_HEIGHT }}>
