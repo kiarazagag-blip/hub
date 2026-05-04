@@ -41,6 +41,7 @@ export default async function DashboardPage({
   return (
     <DashboardClient
       userName={session.user?.name}
+      userEmail={session.user?.email}
       bookings={serialized}
       selectedDate={selectedDate}
       initialView={initialView}

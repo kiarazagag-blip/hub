@@ -17,7 +17,7 @@ import {
 import { he } from "date-fns/locale"
 import { Navbar } from "@/components/navbar"
 import { DailyView } from "@/components/daily-view"
-import { ChevronRight, ChevronLeft, Calendar as CalendarIcon, Plus } from "lucide-react"
+import { ChevronRight, ChevronLeft, Calendar as CalendarIcon, Plus, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -47,16 +47,19 @@ const slideVariants = {
 
 export function DashboardClient({
   userName,
+  userEmail,
   bookings,
   selectedDate,
   initialView = "monthly",
 }: {
   userName?: string | null
+  userEmail?: string | null
   bookings: any
   selectedDate: Date
   initialView?: "daily" | "monthly"
 }) {
   const [view, setView] = useState<"daily" | "monthly">(initialView)
+  const [isNavigating, setIsNavigating] = useState(false)
   const [activeDate, setActiveDate] = useState<Date>(new Date(selectedDate))
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(selectedDate))
   const [[monthPage, slideDir], setMonthPage] = useState([0, 0])
@@ -272,7 +275,7 @@ export function DashboardClient({
                       transition={{ ...CURTAIN, delay: 0.05 }}
                       className="mt-2"
                     >
-                      <DailyView bookings={bookings} selectedDate={activeDate} />
+                      <DailyView bookings={bookings} selectedDate={activeDate} currentUserEmail={userEmail} />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -284,12 +287,16 @@ export function DashboardClient({
       </main>
 
       {/* Floating Action Button */}
-      <Link
-        href={`/book?date=${format(activeDate, "yyyy-MM-dd")}`}
+      <button
+        onClick={() => {
+          setIsNavigating(true)
+          window.location.href = `/book?date=${format(activeDate, "yyyy-MM-dd")}`
+        }}
+        disabled={isNavigating}
         className="fixed bottom-6 left-6 w-14 h-14 bg-brand-blue text-white rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 active:scale-95 z-50 hover:bg-brand-blue/90"
       >
-        <Plus className="w-8 h-8" />
-      </Link>
+        {isNavigating ? <Loader2 className="w-6 h-6 animate-spin" /> : <Plus className="w-8 h-8" />}
+      </button>
     </div>
   )
 }

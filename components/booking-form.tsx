@@ -26,6 +26,7 @@ export function BookingForm({ initialDate }: BookingFormProps) {
   const [startTime, setStartTime] = useState<TimeValue>({ hour: 9, minute: 0 })
   const [endTime, setEndTime] = useState<TimeValue>({ hour: 10, minute: 0 })
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [isCancelling, setIsCancelling] = useState(false)
   const [errorMsg, setErrorMsg] = useState("")
 
   const {
@@ -217,9 +218,13 @@ export function BookingForm({ initialDate }: BookingFormProps) {
           variant="ghost"
           size="lg"
           className="flex-1 rounded-2xl text-brand-black/60 hover:text-brand-black hover:bg-brand-gray"
-          onClick={() => router.push("/dashboard?view=monthly")}
+          disabled={isCancelling || status === "loading"}
+          onClick={() => {
+            setIsCancelling(true)
+            window.location.href = "/dashboard?view=monthly"
+          }}
         >
-          ביטול
+          {isCancelling ? <Loader2 className="w-4 h-4 animate-spin" /> : "ביטול"}
         </Button>
         <Button
           type="submit"

@@ -18,13 +18,33 @@ export interface Booking {
 interface DailyViewProps {
   bookings: Booking[]
   selectedDate: Date
+  currentUserEmail?: string | null
 }
 
 const HOUR_HEIGHT = 80
 
-export function DailyView({ bookings, selectedDate }: DailyViewProps) {
+export function DailyView({ bookings, selectedDate, currentUserEmail }: DailyViewProps) {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
   const hours = Array.from({ length: 16 }, (_, i) => i + 8)
+
+  const handleDeleteBooking = async (id: string) => {
+    if (!confirm("האם אתה בטוח שברצונך לבטל את ההזמנה?")) return
+    setIsDeleting(true)
+    try {
+      const res = await fetch(`/api/bookings/${id}`, { method: "DELETE" })
+      if (res.ok) {
+        window.location.reload()
+      } else {
+        alert("שגיאה בביטול ההזמנה")
+        setIsDeleting(false)
+      }
+    } catch (e) {
+      console.error(e)
+      alert("שגיאה בביטול ההזמנה")
+      setIsDeleting(false)
+    }
+  }
 
   const dayBookings = useMemo(
     () => bookings.filter((b) => isSameDay(new Date(b.startTime), selectedDate)),
@@ -175,6 +195,16 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
               >
                 סגור
               </button>
+
+              {currentUserEmail && currentUserEmail === selectedBooking.email && (
+                <button
+                  onClick={() => handleDeleteBooking(selectedBooking.id)}
+                  disabled={isDeleting}
+                  className="w-full mt-3 py-3.5 bg-red-50 text-red-600 rounded-xl font-bold active:scale-95 transition-transform border border-red-100 flex justify-center items-center"
+                >
+                  {isDeleting ? "מבטל..." : "ביטול הזמנה"}
+                </button>
+              )}
             </motion.div>
           </div>
         )}
