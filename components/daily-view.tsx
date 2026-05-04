@@ -1,9 +1,10 @@
 "use client"
 
-import { useMemo } from "react"
+import { useState, useMemo } from "react"
 import { format, isSameDay } from "date-fns"
 import { he } from "date-fns/locale"
 import { Clock, Phone } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 
 export interface Booking {
   id: string
@@ -22,6 +23,7 @@ interface DailyViewProps {
 const HOUR_HEIGHT = 80
 
 export function DailyView({ bookings, selectedDate }: DailyViewProps) {
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
   const hours = Array.from({ length: 16 }, (_, i) => i + 8)
 
   const dayBookings = useMemo(
@@ -92,19 +94,20 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
             return (
               <div
                 key={booking.id}
-                className="absolute left-1 right-1 bg-brand-black rounded-xl px-3 py-2 overflow-hidden border border-white/5 transition-all hover:brightness-110 flex flex-col justify-center"
+                onClick={() => setSelectedBooking(booking)}
+                className="absolute left-1 right-1 bg-brand-black rounded-xl px-3 py-2 overflow-hidden border border-white/5 transition-all hover:brightness-110 flex flex-col justify-center cursor-pointer shadow-sm active:scale-[0.98]"
                 style={getBookingStyle(booking)}
               >
-                <div className="flex flex-col gap-0.5">
-                  <p className="text-white text-[13px] font-bold truncate">
+                <div className="flex flex-col gap-0.5 w-full">
+                  <p className="text-white text-[13px] font-bold truncate text-right w-full">
                     {booking.name}
                   </p>
                   <p 
-                    className="text-white/60 text-[10px] font-medium flex items-center gap-1.5"
+                    className="text-white/90 text-[11px] font-medium flex items-center justify-end gap-1.5 w-full"
                     dir="ltr"
                   >
-                    <span className="opacity-40">●</span>
-                    {`${String(start.getUTCHours()).padStart(2,"0")}:${String(start.getUTCMinutes()).padStart(2,"0")}`} – {`${String(end.getUTCHours()).padStart(2,"0")}:${String(end.getUTCMinutes()).padStart(2,"0")}`}
+                    <span className="opacity-40 text-[8px]">●</span>
+                    <span>{`${String(start.getUTCHours()).padStart(2,"0")}:${String(start.getUTCMinutes()).padStart(2,"0")}`} – {`${String(end.getUTCHours()).padStart(2,"0")}:${String(end.getUTCMinutes()).padStart(2,"0")}`}</span>
                   </p>
                 </div>
               </div>
@@ -112,6 +115,70 @@ export function DailyView({ bookings, selectedDate }: DailyViewProps) {
           })}
         </div>
       </div>
+
+      {/* Booking Details Modal */}
+      <AnimatePresence>
+        {selectedBooking && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-brand-black/40 backdrop-blur-sm"
+              onClick={() => setSelectedBooking(null)}
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl relative z-10"
+            >
+              <div className="flex justify-between items-start mb-6">
+                <div className="text-right flex-1">
+                  <h3 className="text-xl font-black text-brand-black mb-1">{selectedBooking.name}</h3>
+                  <p className="text-sm font-bold text-brand-black/40" dir="ltr" style={{ textAlign: "right" }}>
+                    {format(new Date(selectedBooking.startTime), "dd/MM/yyyy")}
+                  </p>
+                </div>
+                <div className="w-10 h-10 bg-[#BFE9FF] rounded-full flex items-center justify-center text-brand-blue font-bold text-lg shrink-0 ml-4">
+                  {selectedBooking.name.charAt(0)}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center gap-4 p-4 bg-brand-gray rounded-2xl">
+                  <div className="flex-1" dir="ltr" style={{ textAlign: "right" }}>
+                    <p className="text-[11px] font-bold text-brand-black/40 uppercase tracking-wider mb-0.5 text-right">שעות</p>
+                    <p className="text-sm font-bold text-brand-black">
+                      {`${String(new Date(selectedBooking.startTime).getUTCHours()).padStart(2,"0")}:${String(new Date(selectedBooking.startTime).getUTCMinutes()).padStart(2,"0")}`} – {`${String(new Date(selectedBooking.endTime).getUTCHours()).padStart(2,"0")}:${String(new Date(selectedBooking.endTime).getUTCMinutes()).padStart(2,"0")}`}
+                    </p>
+                  </div>
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
+                    <Clock className="w-5 h-5 text-brand-blue" />
+                  </div>
+                </div>
+
+                <a href={`tel:${selectedBooking.phone}`} className="flex items-center gap-4 p-4 bg-[#ffbb0d]/10 rounded-2xl active:scale-95 transition-transform">
+                  <div className="flex-1 text-right">
+                    <p className="text-[11px] font-bold text-[#ffbb0d] uppercase tracking-wider mb-0.5 text-right">טלפון (לחץ לחיוג)</p>
+                    <p className="text-lg font-black text-brand-black" dir="ltr" style={{ textAlign: "right" }}>{selectedBooking.phone}</p>
+                  </div>
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
+                    <Phone className="w-5 h-5 text-[#ffbb0d]" fill="currentColor" />
+                  </div>
+                </a>
+              </div>
+
+              <button 
+                onClick={() => setSelectedBooking(null)}
+                className="w-full mt-6 py-3.5 bg-brand-black text-white rounded-xl font-bold active:scale-95 transition-transform"
+              >
+                סגור
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
