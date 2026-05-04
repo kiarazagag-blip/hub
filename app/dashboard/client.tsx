@@ -38,11 +38,11 @@ const SLIDE = {
   mass: 0.6,
 }
 
-// RTL: next month enters from LEFT, exits to RIGHT
+// RTL: next month enters from LEFT
 const slideVariants = {
-  enter: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%" }),
-  center: { x: 0 },
-  exit: (dir: number) => ({ x: dir < 0 ? "100%" : "-100%" }),
+  enter: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%", opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: { opacity: 0, transition: { duration: 0.15 } },
 }
 
 export function DashboardClient({
@@ -61,10 +61,7 @@ export function DashboardClient({
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(selectedDate))
   const [[monthPage, slideDir], setMonthPage] = useState([0, 0])
 
-  // Touch tracking for Instagram-like swipe (no drag physics)
-  const touchStartX = useRef(0)
-  const touchStartY = useRef(0)
-  const touchStartTime = useRef(0)
+
 
   // Lock body scroll in monthly view
   useEffect(() => {
@@ -108,30 +105,6 @@ export function DashboardClient({
     setMonthPage(([page]) => [page + offset, offset])
     const next = offset > 0 ? addMonths(currentMonth, 1) : subMonths(currentMonth, 1)
     setCurrentMonth(next)
-  }
-
-  // Native touch handlers — crisp, no drag interference with scroll
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
-    touchStartY.current = e.touches[0].clientY
-    touchStartTime.current = Date.now()
-  }
-
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (view !== "monthly") return
-    const dx = e.changedTouches[0].clientX - touchStartX.current
-    const dy = e.changedTouches[0].clientY - touchStartY.current
-    const dt = Date.now() - touchStartTime.current
-    const velocity = Math.abs(dx) / dt // px/ms
-
-    // Only fire if horizontal movement clearly dominates vertical
-    if (Math.abs(dx) < Math.abs(dy) * 1.2) return
-    // Require a meaningful swipe or a fast flick
-    if (Math.abs(dx) < 40 && velocity < 0.4) return
-
-    // RTL: right = next month (numerically higher), left = previous month
-    if (dx > 0) handleMonthChange(1)
-    else handleMonthChange(-1)
   }
 
   const DAY_NAMES = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"]
@@ -185,12 +158,8 @@ export function DashboardClient({
             )}
           </div>
 
-          {/* Calendar carousel — touch handled natively, no drag physics */}
-          <div
-            className="relative"
-            onTouchStart={view === "monthly" ? onTouchStart : undefined}
-            onTouchEnd={view === "monthly" ? onTouchEnd : undefined}
-          >
+          {/* Calendar carousel */}
+          <div className="relative">
             <AnimatePresence initial={false} custom={slideDir} mode="popLayout">
               <motion.div
                 key={monthPage}
@@ -200,6 +169,15 @@ export function DashboardClient({
                 animate="center"
                 exit="exit"
                 transition={SLIDE}
+                drag={view === "monthly" ? "x" : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={1}
+                onDragEnd={(_, { offset, velocity }) => {
+                  const power = offset.x + velocity.x * 0.3
+                  // RTL: right = next month, left = previous month
+                  if (power > 50) handleMonthChange(1)
+                  else if (power < -50) handleMonthChange(-1)
+                }}
                 style={{ touchAction: view === "monthly" ? "pan-x" : "pan-y" }}
                 className="w-full pt-4"
               >
