@@ -42,7 +42,7 @@ const SLIDE = {
 const slideVariants = {
   enter: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%", opacity: 0 }),
   center: { x: 0, opacity: 1 },
-  exit: { opacity: 0, transition: { duration: 0.15 } },
+  exit: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%", opacity: 0 }),
 }
 
 export function DashboardClient({
@@ -60,6 +60,7 @@ export function DashboardClient({
   const [activeDate, setActiveDate] = useState<Date>(new Date(selectedDate))
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(selectedDate))
   const [[monthPage, slideDir], setMonthPage] = useState([0, 0])
+  const [isAnimating, setIsAnimating] = useState(false)
 
 
 
@@ -102,6 +103,7 @@ export function DashboardClient({
   }
 
   const handleMonthChange = (offset: number) => {
+    if (isAnimating) return
     setMonthPage(([page]) => [page + offset, offset])
     const next = offset > 0 ? addMonths(currentMonth, 1) : subMonths(currentMonth, 1)
     setCurrentMonth(next)
@@ -117,7 +119,7 @@ export function DashboardClient({
         <div className="flex flex-col">
 
           {/* Header — sticky, clips anything sliding behind it */}
-          <div className="sticky top-0 bg-brand-gray z-40 pb-2">
+          <div className="sticky top-0 bg-brand-gray z-50 pb-2">
             <div className="flex items-center justify-between pt-6 mb-2">
               <button
                 onClick={() => (view === "daily" ? setView("monthly") : handleMonthChange(-1))}
@@ -159,7 +161,7 @@ export function DashboardClient({
           </div>
 
           {/* Calendar carousel */}
-          <div className="relative">
+          <div className="relative z-0">
             <AnimatePresence initial={false} custom={slideDir} mode="popLayout">
               <motion.div
                 key={monthPage}
@@ -169,12 +171,15 @@ export function DashboardClient({
                 animate="center"
                 exit="exit"
                 transition={SLIDE}
+                onAnimationStart={() => setIsAnimating(true)}
+                onAnimationComplete={() => setIsAnimating(false)}
                 drag={view === "monthly" ? "x" : false}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.7}
                 dragMomentum={false}
                 dragDirectionLock={true}
                 onDragEnd={(_, { offset, velocity }) => {
+                  if (isAnimating) return
                   const power = offset.x + velocity.x * 0.3
                   // RTL: right = next month, left = previous month
                   if (power > 50) handleMonthChange(1)
