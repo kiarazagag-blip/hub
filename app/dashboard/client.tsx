@@ -22,12 +22,10 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
-// Curtain: fast spring for date opening animation
+// Curtain: snappy tween for date open/close
 const CURTAIN = {
-  type: "spring",
-  stiffness: 700,
-  damping: 50,
-  mass: 0.5,
+  duration: 0.15,
+  ease: [0.25, 0.46, 0.45, 0.94],
 }
 
 // Carousel: crisp Instagram-like snap
@@ -132,7 +130,7 @@ export function DashboardClient({
   const DAY_NAMES = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"]
 
   return (
-    <div className={cn("bg-brand-gray overflow-x-hidden w-full overscroll-none", view === "monthly" ? "h-[100dvh] overflow-hidden touch-none" : "min-h-[100dvh]")}>
+    <div className={cn("bg-brand-gray w-full overscroll-none", view === "monthly" ? "h-[100dvh] overflow-hidden touch-none" : "min-h-[100dvh]")}>
       <Navbar userName={userName} currentView={view} onViewChange={setView} selectedDate={activeDate} />
 
       <main className="w-full max-w-4xl mx-auto px-4 py-8">
@@ -181,7 +179,7 @@ export function DashboardClient({
           </div>
 
           {/* Calendar carousel */}
-          <div className={cn("relative z-0 grid", view === "monthly" ? "overflow-hidden" : "overflow-visible")} style={{ gridTemplateAreas: "'carousel'" }}>
+          <div className="relative z-0 overflow-hidden grid" style={{ gridTemplateAreas: "'carousel'" }}>
             <AnimatePresence initial={false} custom={slideDir}>
               <motion.div
                 key={monthPage}
@@ -283,24 +281,25 @@ export function DashboardClient({
                   )
                 })}
 
-                {/* Daily view schedule */}
-                <AnimatePresence mode="wait">
-                  {view === "daily" && (
-                    <motion.div
-                      key="daily-view"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 20 }}
-                      transition={{ ...CURTAIN, delay: 0.05 }}
-                      className="mt-2"
-                    >
-                      <DailyView bookings={bookings} selectedDate={activeDate} onBookingClick={setSelectedBooking} />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </motion.div>
             </AnimatePresence>
           </div>
+
+          {/* Daily view — outside the drag carousel so touch-action never interferes */}
+          <AnimatePresence mode="wait">
+            {view === "daily" && (
+              <motion.div
+                key="daily-view"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                className="mt-2 pb-24"
+              >
+                <DailyView bookings={bookings} selectedDate={activeDate} onBookingClick={setSelectedBooking} />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
         </div>
       </main>
