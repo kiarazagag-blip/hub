@@ -189,7 +189,7 @@ export function DashboardClient({
 
           {/* Calendar carousel — touch handled natively, no drag physics */}
           <div
-            className="relative overflow-x-hidden"
+            className="relative"
             onTouchStart={view === "monthly" ? onTouchStart : undefined}
             onTouchEnd={view === "monthly" ? onTouchEnd : undefined}
           >
@@ -202,6 +202,7 @@ export function DashboardClient({
                 animate="center"
                 exit="exit"
                 transition={SLIDE}
+                style={{ touchAction: view === "monthly" ? "pan-x" : "pan-y" }}
                 className="w-full pt-4"
               >
                 {/* Week rows with curtain animation */}
