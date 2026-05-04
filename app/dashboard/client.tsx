@@ -230,7 +230,7 @@ export function DashboardClient({
                     >
                       {week.map((date, di) => {
                         const inMonth = isSameMonth(date, currentMonth)
-                        const isSelected = isSameDay(date, activeDate)
+                        const isSelected = isSameDay(date, activeDate) && isSameMonth(activeDate, currentMonth)
                         const hasBooking = bookings.some((b: any) => isSameDay(new Date(b.startTime), date))
                         const today = isToday(date)
 
