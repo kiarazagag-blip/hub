@@ -40,9 +40,9 @@ const SLIDE = {
 
 // RTL: next month enters from LEFT
 const slideVariants = {
-  enter: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%" }),
-  center: { x: 0 },
-  exit: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%" }),
+  enter: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%", zIndex: 1 }),
+  center: { x: 0, zIndex: 1 },
+  exit: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%", zIndex: 0 }),
 }
 
 export function DashboardClient({
@@ -179,7 +179,7 @@ export function DashboardClient({
                   else if (power < -50) handleMonthChange(-1)
                 }}
                 style={{ gridArea: "carousel", touchAction: view === "monthly" ? "pan-x" : "pan-y" }}
-                className="w-full pt-4"
+                className="w-full pt-4 bg-brand-gray"
               >
                 {/* Week rows with curtain animation */}
                 {weeks.map((week, wi) => {
