@@ -59,7 +59,6 @@ export function DashboardClient({
   initialView?: "daily" | "monthly"
 }) {
   const [view, setView] = useState<"daily" | "monthly">(initialView)
-  const [isNavigating, setIsNavigating] = useState(false)
   const [activeDate, setActiveDate] = useState<Date>(new Date(selectedDate))
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(selectedDate))
   const [[monthPage, slideDir], setMonthPage] = useState([0, 0])
@@ -162,7 +161,7 @@ export function DashboardClient({
           </div>
 
           {/* Calendar carousel */}
-          <div className="relative z-0 overflow-hidden px-1 -mx-1 grid" style={{ gridTemplateAreas: "'carousel'" }}>
+          <div className="relative z-0 overflow-hidden grid" style={{ gridTemplateAreas: "'carousel'" }}>
             <AnimatePresence initial={false} custom={slideDir}>
               <motion.div
                 key={monthPage}
@@ -287,16 +286,12 @@ export function DashboardClient({
       </main>
 
       {/* Floating Action Button */}
-      <button
-        onClick={() => {
-          setIsNavigating(true)
-          window.location.href = `/book?date=${format(activeDate, "yyyy-MM-dd")}`
-        }}
-        disabled={isNavigating}
+      <Link
+        href={`/book?date=${format(activeDate, "yyyy-MM-dd")}`}
         className="fixed bottom-6 left-6 w-14 h-14 bg-brand-blue text-white rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 active:scale-95 z-50 hover:bg-brand-blue/90"
       >
-        {isNavigating ? <Loader2 className="w-6 h-6 animate-spin" /> : <Plus className="w-8 h-8" />}
-      </button>
+        <Plus className="w-8 h-8" />
+      </Link>
     </div>
   )
 }
