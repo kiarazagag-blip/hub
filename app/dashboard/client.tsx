@@ -110,7 +110,7 @@ export function DashboardClient({
   const DAY_NAMES = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"]
 
   return (
-    <div className={cn("bg-brand-gray overflow-x-hidden w-full", view === "monthly" ? "fixed inset-0 touch-none" : "min-h-screen")}>
+    <div className={cn("bg-brand-gray overflow-x-hidden w-full overscroll-none", view === "monthly" ? "h-[100dvh] overflow-hidden touch-none" : "min-h-[100dvh]")}>
       <Navbar userName={userName} currentView={view} onViewChange={setView} selectedDate={activeDate} />
 
       <main className="w-full max-w-4xl mx-auto px-4 py-8">
