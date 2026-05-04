@@ -18,33 +18,13 @@ export interface Booking {
 interface DailyViewProps {
   bookings: Booking[]
   selectedDate: Date
-  currentUserEmail?: string | null
+  onBookingClick: (booking: Booking) => void
 }
 
 const HOUR_HEIGHT = 80
 
-export function DailyView({ bookings, selectedDate, currentUserEmail }: DailyViewProps) {
-  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
-  const [isDeleting, setIsDeleting] = useState(false)
+export function DailyView({ bookings, selectedDate, onBookingClick }: DailyViewProps) {
   const hours = Array.from({ length: 16 }, (_, i) => i + 8)
-
-  const handleDeleteBooking = async (id: string) => {
-    if (!confirm("האם אתה בטוח שברצונך לבטל את ההזמנה?")) return
-    setIsDeleting(true)
-    try {
-      const res = await fetch(`/api/bookings/${id}`, { method: "DELETE" })
-      if (res.ok) {
-        window.location.reload()
-      } else {
-        alert("שגיאה בביטול ההזמנה")
-        setIsDeleting(false)
-      }
-    } catch (e) {
-      console.error(e)
-      alert("שגיאה בביטול ההזמנה")
-      setIsDeleting(false)
-    }
-  }
 
   const dayBookings = useMemo(
     () => bookings.filter((b) => isSameDay(new Date(b.startTime), selectedDate)),
@@ -114,7 +94,7 @@ export function DailyView({ bookings, selectedDate, currentUserEmail }: DailyVie
             return (
               <div
                 key={booking.id}
-                onClick={() => setSelectedBooking(booking)}
+                onClick={() => onBookingClick(booking)}
                 className="absolute left-1 right-1 bg-brand-black rounded-xl px-3 py-2 overflow-hidden border border-white/5 transition-all hover:brightness-110 flex flex-col justify-center cursor-pointer shadow-sm active:scale-[0.98]"
                 style={getBookingStyle(booking)}
               >
@@ -135,80 +115,6 @@ export function DailyView({ bookings, selectedDate, currentUserEmail }: DailyVie
           })}
         </div>
       </div>
-
-      {/* Booking Details Modal */}
-      <AnimatePresence>
-        {selectedBooking && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-brand-black/40 backdrop-blur-sm"
-              onClick={() => setSelectedBooking(null)}
-            />
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl relative z-10"
-            >
-              <div className="flex justify-between items-start mb-6">
-                <div className="text-right flex-1">
-                  <h3 className="text-xl font-black text-brand-black mb-1">{selectedBooking.name}</h3>
-                  <p className="text-sm font-bold text-brand-black/40" dir="ltr" style={{ textAlign: "right" }}>
-                    {format(new Date(selectedBooking.startTime), "dd/MM/yyyy")}
-                  </p>
-                </div>
-                <div className="w-10 h-10 bg-[#BFE9FF] rounded-full flex items-center justify-center text-brand-blue font-bold text-lg shrink-0 ml-4">
-                  {selectedBooking.name.charAt(0)}
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center gap-4 p-4 bg-brand-gray rounded-2xl">
-                  <div className="flex-1" dir="ltr" style={{ textAlign: "right" }}>
-                    <p className="text-[11px] font-bold text-brand-black/40 uppercase tracking-wider mb-0.5 text-right">שעות</p>
-                    <p className="text-sm font-bold text-brand-black">
-                      {`${String(new Date(selectedBooking.startTime).getUTCHours()).padStart(2,"0")}:${String(new Date(selectedBooking.startTime).getUTCMinutes()).padStart(2,"0")}`} – {`${String(new Date(selectedBooking.endTime).getUTCHours()).padStart(2,"0")}:${String(new Date(selectedBooking.endTime).getUTCMinutes()).padStart(2,"0")}`}
-                    </p>
-                  </div>
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
-                    <Clock className="w-5 h-5 text-brand-blue" />
-                  </div>
-                </div>
-
-                <a href={`tel:${selectedBooking.phone}`} className="flex items-center gap-4 p-4 bg-[#ffbb0d]/10 rounded-2xl active:scale-95 transition-transform">
-                  <div className="flex-1 text-right">
-                    <p className="text-[11px] font-bold text-[#ffbb0d] uppercase tracking-wider mb-0.5 text-right">טלפון (לחץ לחיוג)</p>
-                    <p className="text-lg font-black text-brand-black" dir="ltr" style={{ textAlign: "right" }}>{selectedBooking.phone}</p>
-                  </div>
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
-                    <Phone className="w-5 h-5 text-[#ffbb0d]" fill="currentColor" />
-                  </div>
-                </a>
-              </div>
-
-              <button 
-                onClick={() => setSelectedBooking(null)}
-                className="w-full mt-6 py-3.5 bg-brand-black text-white rounded-xl font-bold active:scale-95 transition-transform"
-              >
-                סגור
-              </button>
-
-              {currentUserEmail && currentUserEmail === selectedBooking.email && (
-                <button
-                  onClick={() => handleDeleteBooking(selectedBooking.id)}
-                  disabled={isDeleting}
-                  className="w-full mt-3 py-3.5 bg-red-50 text-red-600 rounded-xl font-bold active:scale-95 transition-transform border border-red-100 flex justify-center items-center"
-                >
-                  {isDeleting ? "מבטל..." : "ביטול הזמנה"}
-                </button>
-              )}
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
