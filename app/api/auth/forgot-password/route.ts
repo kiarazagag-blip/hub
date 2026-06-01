@@ -34,7 +34,7 @@ export async function POST(req: Request) {
       const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${token}`
 
       try {
-        await resend.emails.send({
+        const { data, error: sendError } = await resend.emails.send({
           from: process.env.EMAIL_FROM || "onboarding@resend.dev",
           to: email,
           subject: "איפוס סיסמה — HUBbooking",
@@ -50,6 +50,10 @@ export async function POST(req: Request) {
             </div>
           `,
         })
+
+        if (sendError) {
+          throw new Error(sendError.message)
+        }
       } catch (emailError: any) {
          console.error("Failed to send email:", emailError)
          return NextResponse.json({ error: "שגיאה בשליחת אימייל: " + (emailError.message || "Unknown error") }, { status: 500 })
