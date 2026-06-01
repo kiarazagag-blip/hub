@@ -11,6 +11,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "נדרשת כתובת אימייל" }, { status: 400 })
     }
 
+    if (!process.env.RESEND_API_KEY) {
+      console.error("Missing RESEND_API_KEY environment variable")
+      return NextResponse.json({ error: "מפתח התחברות לשרת האימיילים חסר (RESEND_API_KEY)" }, { status: 500 })
+    }
+
     const resend = new Resend(process.env.RESEND_API_KEY)
     const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } })
 
@@ -28,28 +33,34 @@ export async function POST(req: Request) {
 
       const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${token}`
 
-      await resend.emails.send({
-        from: process.env.EMAIL_FROM || "onboarding@resend.dev",
-        to: email,
-        subject: "איפוס סיסמה — HUBbooking",
-        html: `
-          <div dir="rtl" style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #f8f8f8; border-radius: 16px;">
-            <h1 style="font-size: 22px; font-weight: 800; color: #111; margin-bottom: 8px;">איפוס סיסמה</h1>
-            <p style="color: #555; font-size: 15px; margin-bottom: 24px;">קיבלנו בקשה לאיפוס הסיסמה שלך. לחץ על הכפתור למטה לבחירת סיסמה חדשה:</p>
-            <a href="${resetUrl}" 
-               style="display: inline-block; background: #111; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px;">
-              אפס סיסמה
-            </a>
-            <p style="color: #999; font-size: 12px; margin-top: 24px;">הקישור תקף לשעה אחת. אם לא ביקשת איפוס סיסמה, ניתן להתעלם מהודעה זו.</p>
-          </div>
-        `,
-      })
+      try {
+        await resend.emails.send({
+          from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+          to: email,
+          subject: "איפוס סיסמה — HUBbooking",
+          html: `
+            <div dir="rtl" style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #f8f8f8; border-radius: 16px;">
+              <h1 style="font-size: 22px; font-weight: 800; color: #111; margin-bottom: 8px;">איפוס סיסמה</h1>
+              <p style="color: #555; font-size: 15px; margin-bottom: 24px;">קיבלנו בקשה לאיפוס הסיסמה שלך. לחץ על הכפתור למטה לבחירת סיסמה חדשה:</p>
+              <a href="${resetUrl}" 
+                 style="display: inline-block; background: #111; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px;">
+                אפס סיסמה
+              </a>
+              <p style="color: #999; font-size: 12px; margin-top: 24px;">הקישור תקף לשעה אחת. אם לא ביקשת איפוס סיסמה, ניתן להתעלם מהודעה זו.</p>
+            </div>
+          `,
+        })
+      } catch (emailError: any) {
+         console.error("Failed to send email:", emailError)
+         return NextResponse.json({ error: "שגיאה בשליחת אימייל: " + (emailError.message || "Unknown error") }, { status: 500 })
+      }
     }
 
     // Always return the same response
     return NextResponse.json({ success: true })
-  } catch (error) {
+  } catch (error: any) {
     console.error("forgot-password error:", error)
-    return NextResponse.json({ error: "שגיאת שרת" }, { status: 500 })
+    return NextResponse.json({ error: "שגיאת שרת: " + (error.message || "Unknown error") }, { status: 500 })
   }
 }
+
