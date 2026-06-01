@@ -3,8 +3,6 @@ import { prisma } from "@/lib/db"
 import { randomBytes } from "crypto"
 import { Resend } from "resend"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export async function POST(req: Request) {
   try {
     const { email } = await req.json()
@@ -13,7 +11,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "נדרשת כתובת אימייל" }, { status: 400 })
     }
 
-    // Always return success even if email not found — prevents enumeration
+    const resend = new Resend(process.env.RESEND_API_KEY)
     const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } })
 
     if (user) {
