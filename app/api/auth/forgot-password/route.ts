@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import { randomBytes } from "crypto"
-import { Resend } from "resend"
+import nodemailer from "nodemailer"
 
 export async function POST(req: Request) {
   try {
@@ -11,12 +11,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "נדרשת כתובת אימייל" }, { status: 400 })
     }
 
-    if (!process.env.RESEND_API_KEY) {
-      console.error("Missing RESEND_API_KEY environment variable")
-      return NextResponse.json({ error: "מפתח התחברות לשרת האימיילים חסר (RESEND_API_KEY)" }, { status: 500 })
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+      console.error("Missing EMAIL_USER or EMAIL_PASSWORD environment variable")
+      return NextResponse.json({ error: "פרטי התחברות למייל חסרים בשרת" }, { status: 500 })
     }
 
-    const resend = new Resend(process.env.RESEND_API_KEY)
     const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } })
 
     if (user) {
@@ -34,8 +33,16 @@ export async function POST(req: Request) {
       const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${token}`
 
       try {
-        const { data, error: sendError } = await resend.emails.send({
-          from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+        })
+
+        await transporter.sendMail({
+          from: `"HUBbooking" <${process.env.EMAIL_USER}>`,
           to: email,
           subject: "איפוס סיסמה — HUBbooking",
           html: `
@@ -50,12 +57,8 @@ export async function POST(req: Request) {
             </div>
           `,
         })
-
-        if (sendError) {
-          throw new Error(sendError.message)
-        }
       } catch (emailError: any) {
-         console.error("Failed to send email:", emailError)
+         console.error("Failed to send email via nodemailer:", emailError)
          return NextResponse.json({ error: "שגיאה בשליחת אימייל: " + (emailError.message || "Unknown error") }, { status: 500 })
       }
     }
