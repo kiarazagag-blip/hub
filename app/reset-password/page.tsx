@@ -54,10 +54,10 @@ function ResetPasswordForm() {
   if (!token) {
     return (
       <div className="flex flex-col items-center text-center gap-4 py-4">
-        <AlertCircle className="w-10 h-10 text-red-400" />
-        <h1 className="text-xl font-bold text-white">קישור לא תקין</h1>
-        <p className="text-sm text-white/60">הקישור שבו השתמשת אינו תקין או שפג תוקפו.</p>
-        <Link href="/forgot-password" className="text-sm font-bold text-white/80 underline mt-2">
+        <AlertCircle className="w-10 h-10 text-red-500" />
+        <h1 className="text-xl font-bold text-brand-black">קישור לא תקין</h1>
+        <p className="text-sm text-brand-black/60">הקישור שבו השתמשת אינו תקין או שפג תוקפו.</p>
+        <Link href="/forgot-password" className="text-sm font-bold text-brand-black/80 underline mt-2 hover:text-brand-blue transition-colors">
           בקש קישור חדש
         </Link>
       </div>
@@ -68,22 +68,22 @@ function ResetPasswordForm() {
     <>
       {status === "success" ? (
         <div className="flex flex-col items-center text-center gap-4 py-4">
-          <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center">
-            <CheckCircle2 className="w-8 h-8 text-white" />
+          <div className="w-16 h-16 bg-brand-black/5 rounded-full flex items-center justify-center">
+            <CheckCircle2 className="w-8 h-8 text-brand-black" />
           </div>
-          <h1 className="text-2xl font-bold text-white">הסיסמה עודכנה!</h1>
-          <p className="text-sm text-white/60">מעביר אותך להתחברות…</p>
+          <h1 className="text-2xl font-bold text-brand-black">הסיסמה עודכנה!</h1>
+          <p className="text-sm text-brand-black/60">מעביר אותך להתחברות…</p>
         </div>
       ) : (
         <>
           <div className="flex flex-col items-center mb-8">
-            <h1 className="text-2xl font-bold text-white tracking-tight">סיסמה חדשה</h1>
-            <p className="text-sm text-white/60 mt-2 text-center">בחר סיסמה חדשה לחשבונך</p>
+            <h1 className="text-2xl font-bold text-brand-black tracking-tight">סיסמה חדשה</h1>
+            <p className="text-sm text-brand-black/60 mt-2 text-center">בחר סיסמה חדשה לחשבונך</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="newPassword" className="text-white/70 text-xs font-bold mr-1">סיסמה חדשה</Label>
+              <Label htmlFor="newPassword" className="text-brand-black/70 text-xs font-bold mr-1">סיסמה חדשה</Label>
               <div className="relative">
                 <Input
                   id="newPassword"
@@ -93,23 +93,23 @@ function ResetPasswordForm() {
                     required: "נדרשת סיסמה",
                     minLength: { value: 6, message: "הסיסמה חייבת להכיל לפחות 6 תווים" },
                   })}
-                  className="bg-black/5 border-black/10 text-white placeholder:text-white/20 h-12 rounded-2xl pr-12"
+                  className="bg-black/5 border-black/10 text-brand-black placeholder:text-brand-black/20 h-12 rounded-2xl pr-12 focus:ring-brand-blue/50 focus:border-brand-blue transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-black/40 hover:text-brand-black transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
               {errors.newPassword && (
-                <p className="text-xs text-red-400 font-medium mt-1">{errors.newPassword.message}</p>
+                <p className="text-xs text-red-600 font-medium mt-1">{errors.newPassword.message}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-white/70 text-xs font-bold mr-1">אימות סיסמה</Label>
+              <Label htmlFor="confirmPassword" className="text-brand-black/70 text-xs font-bold mr-1">אימות סיסמה</Label>
               <Input
                 id="confirmPassword"
                 type={showPassword ? "text" : "password"}
@@ -118,15 +118,15 @@ function ResetPasswordForm() {
                   required: "נדרש אימות סיסמה",
                   validate: (val) => val === watch("newPassword") || "הסיסמאות אינן תואמות",
                 })}
-                className="bg-black/5 border-black/10 text-white placeholder:text-white/20 h-12 rounded-2xl"
+                className="bg-black/5 border-black/10 text-brand-black placeholder:text-brand-black/20 h-12 rounded-2xl focus:ring-brand-blue/50 focus:border-brand-blue transition-all"
               />
               {errors.confirmPassword && (
-                <p className="text-xs text-red-400 font-medium mt-1">{errors.confirmPassword.message}</p>
+                <p className="text-xs text-red-600 font-medium mt-1">{errors.confirmPassword.message}</p>
               )}
             </div>
 
             {status === "error" && (
-              <div className="flex items-center gap-2 rounded-2xl bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-400">
+              <div className="flex items-center gap-2 rounded-2xl bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-600">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 {error}
                 {error.includes("פג תוקף") && (
@@ -138,7 +138,7 @@ function ResetPasswordForm() {
             <Button
               type="submit"
               size="lg"
-              className="w-full mt-2 h-14 bg-white text-brand-black rounded-2xl font-bold shadow-xl"
+              className="w-full mt-4 h-14 bg-brand-black hover:bg-brand-black/90 text-white rounded-2xl font-bold shadow-xl shadow-brand-black/20 active:scale-[0.98] transition-all"
               disabled={status === "loading"}
             >
               {status === "loading" ? <Loader2 className="w-5 h-5 animate-spin" /> : "עדכן סיסמה"}
@@ -158,7 +158,7 @@ export default function ResetPasswordPage() {
       </div>
       <div className="w-full max-w-sm relative z-10 bg-white/10 backdrop-blur-sm p-8 rounded-[40px] border border-white/20 shadow-2xl">
         <div className="absolute inset-0 border border-white/10 rounded-[40px] pointer-events-none" />
-        <Suspense fallback={<div className="text-white text-center">טוען…</div>}>
+        <Suspense fallback={<div className="text-brand-black text-center font-medium">טוען…</div>}>
           <ResetPasswordForm />
         </Suspense>
       </div>

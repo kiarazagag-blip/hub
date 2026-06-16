@@ -47,16 +47,16 @@ export default function ForgotPasswordPage() {
 
         {status === "success" ? (
           <div className="flex flex-col items-center text-center gap-4 py-4">
-            <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center">
-              <CheckCircle2 className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 bg-brand-black/5 rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-8 h-8 text-brand-black" />
             </div>
-            <h1 className="text-2xl font-bold text-white">בדוק את האימייל שלך</h1>
-            <p className="text-sm text-white/60">
+            <h1 className="text-2xl font-bold text-brand-black">בדוק את האימייל שלך</h1>
+            <p className="text-sm text-brand-black/60">
               אם קיים חשבון עם כתובת זו, שלחנו אליך קישור לאיפוס הסיסמה. הקישור תקף לשעה אחת.
             </p>
             <Link
               href="/login"
-              className="mt-4 text-sm font-bold text-white/80 flex items-center gap-1"
+              className="mt-4 text-sm font-bold text-brand-black/80 flex items-center gap-1 hover:text-brand-blue transition-colors"
             >
               <ArrowRight className="w-4 h-4" />
               חזור להתחברות
@@ -65,30 +65,30 @@ export default function ForgotPasswordPage() {
         ) : (
           <>
             <div className="flex flex-col items-center mb-8">
-              <h1 className="text-2xl font-bold text-white tracking-tight">שכחת סיסמה?</h1>
-              <p className="text-sm text-white/60 mt-2 text-center">
+              <h1 className="text-2xl font-bold text-brand-black tracking-tight">שכחת סיסמה?</h1>
+              <p className="text-sm text-brand-black/60 mt-2 text-center">
                 הזן את האימייל שלך ונשלח לך קישור לאיפוס הסיסמה
               </p>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-white/70 text-xs font-bold mr-1">אימייל</Label>
+                <Label htmlFor="email" className="text-brand-black/70 text-xs font-bold mr-1">אימייל</Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="you@company.com"
                   autoComplete="email"
                   {...register("email", { required: "נדרשת כתובת אימייל" })}
-                  className="bg-black/5 border-black/10 text-white placeholder:text-white/20 h-12 rounded-2xl"
+                  className="bg-black/5 border-black/10 text-brand-black placeholder:text-brand-black/20 h-12 rounded-2xl focus:ring-brand-blue/50 focus:border-brand-blue transition-all"
                 />
                 {errors.email && (
-                  <p className="text-xs text-red-400 font-medium mt-1">{errors.email.message}</p>
+                  <p className="text-xs text-red-600 font-medium mt-1">{errors.email.message}</p>
                 )}
               </div>
 
               {status === "error" && (
-                <div className="flex items-center gap-2 rounded-2xl bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-400">
+                <div className="flex items-center gap-2 rounded-2xl bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-600">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   {error}
                 </div>
@@ -97,7 +97,7 @@ export default function ForgotPasswordPage() {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full mt-2 h-14 bg-white text-brand-black rounded-2xl font-bold shadow-xl"
+                className="w-full mt-4 h-14 bg-brand-black hover:bg-brand-black/90 text-white rounded-2xl font-bold shadow-xl shadow-brand-black/20 active:scale-[0.98] transition-all"
                 disabled={status === "loading"}
               >
                 {status === "loading" ? <Loader2 className="w-5 h-5 animate-spin" /> : "שלח קישור לאיפוס"}
@@ -105,7 +105,7 @@ export default function ForgotPasswordPage() {
 
               <Link
                 href="/login"
-                className="block text-center text-sm text-white/40 mt-4"
+                className="block text-center text-sm text-brand-black/40 mt-4 hover:text-brand-blue transition-colors"
               >
                 חזור להתחברות
               </Link>
