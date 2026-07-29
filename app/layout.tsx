@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import localFont from "next/font/local"
 import "./globals.css"
 import { Providers } from "@/components/providers"
+import { Analytics } from "@vercel/analytics/next"
 
 const polin = localFont({
   src: [
@@ -57,6 +58,7 @@ export default function RootLayout({
           {children}
           <InstallPrompt />
         </Providers>
+        <Analytics />
       </body>
     </html>
   )
